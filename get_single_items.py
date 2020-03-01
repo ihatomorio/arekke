@@ -29,8 +29,6 @@ print(driver.current_url)
 # スクリーンショットを撮る。
 driver.save_screenshot('page_screenshot.png')
 
-shops.melonbooks.test()
-
 # サイト別に取得する
 if 'booth.pm' in url:
     shops.booth.get_single_item(driver)

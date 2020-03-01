@@ -34,7 +34,3 @@ def get_single_item(driver):
     assert 'resize_image' in url
 
     urllib.request.urlretrieve(url, 'image.png')
-
-
-def test():
-    print('testhoge')
