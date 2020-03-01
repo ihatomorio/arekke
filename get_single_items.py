@@ -38,6 +38,8 @@ elif 'www.melonbooks.co.jp' in url:
     shops.melonbooks.get_single_item(driver)
 elif 'www.dmm.co.jp/dc/doujin' in url:
     shops.fanza_doujin.get_single_item(driver)
+elif 'book.dmm.co.jp' in url:
+    shops.fanza_comic.get_single_item(driver)
 
 # ブラウザーを終了
 driver.quit()
