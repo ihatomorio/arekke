@@ -1,5 +1,7 @@
 __pycache__/
 db.sqlite3
 
+.vscode/
+
 image.png
 page_screenshot.png
