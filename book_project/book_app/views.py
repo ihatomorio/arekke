@@ -9,4 +9,8 @@ class BookListView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = super(BookListView, self).get_context_data(**kwargs)
+
+        book_objs = Book.objects.all()
+        context['books'] = book_objs
+
         return render(self.request, self.template_name, context)
