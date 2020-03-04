@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import book_app.views as book_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('^book_list/', book_view.BookListView.as_view()),  # URLとViewを組み合わせる！
 ]
