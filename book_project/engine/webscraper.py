@@ -15,15 +15,6 @@ def get_single_item(obj):
     # Webページにアクセス
     driver.get(obj.url)
 
-    # タイトルを表示
-    print(driver.title)
-
-    # URLを表示
-    print(driver.current_url)
-
-    # スクリーンショットを撮る。
-    driver.save_screenshot('page_screenshot.png')
-
     # サイト別に取得する
     if 'booth.pm' in obj.url:
         shops.booth.get_single_item(driver, obj)
