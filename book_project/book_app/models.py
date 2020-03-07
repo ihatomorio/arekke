@@ -1,8 +1,11 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 # 本の情報
 class Book(models.Model):
+    # 所有者
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # 書名
     title = models.CharField(max_length=256)
     # 著者
@@ -27,6 +30,8 @@ class Product(models.Model):
     MELONBOOKS = 40
     TORANOANA = 50
     
+    # 所有者
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # 書籍情報
     info = models.ForeignKey('Book', on_delete=models.CASCADE)
     # 購入店舗
