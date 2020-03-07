@@ -11,4 +11,4 @@ class BookForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('info', 'shop', 'url', 'date')
+        fields = ('info', 'shop', 'url', 'date', 'image_path')

@@ -42,6 +42,8 @@ class Product(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     # 追加日時
     added_date = models.DateTimeField(default=timezone.now)
+    # 画像のパス
+    image_path = models.ImageField(upload_to='uploads/', blank=True)
 
     # 自身の情報
     def __str__(self):

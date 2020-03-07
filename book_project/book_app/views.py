@@ -18,7 +18,7 @@ def book_new(request):
             post.owner = request.user
             post.save()
 
-        return redirect('/book/list/', pk=post.pk)
+            return redirect('/book/list/', pk=post.pk)
     else:
         form = book_app.forms.BookForm()
     return render(request, 'book_app/book_new.html', {'form': form})
@@ -31,12 +31,15 @@ def product_list(request):
 
 def product_new(request):
     if request.method == "POST":
-        form = book_app.forms.ProductForm(request.POST)
+        form = book_app.forms.ProductForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.owner = request.user
             post.added_date = timezone.now()
+            # post.image_path = request.FILES['file']
             post.save()
+
+            return redirect('/product/list/', pk=post.pk)
     else:
         form = book_app.forms.ProductForm()
     return render(request, 'book_app/product_new.html', {'form': form})

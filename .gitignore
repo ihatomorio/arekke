@@ -3,5 +3,6 @@ db.sqlite3
 
 .vscode/
 
+book_project/media/*
 image.png
 page_screenshot.png
