@@ -21,5 +21,4 @@ import book_app.views as book_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('book_app.urls')),
-    path('book_list/', book_view.BookListView.as_view()),  # URLとViewを組み合わせる！
 ]

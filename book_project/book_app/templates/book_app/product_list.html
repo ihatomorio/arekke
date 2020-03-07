@@ -2,7 +2,7 @@
 {% load static %}
 
 <!-- title block -->
-{% block title %} - Book List{% endblock %}
+{% block title %} - Product List{% endblock %}
 
 <!-- Custom styles for this page -->
 {% block pagecss %}
@@ -26,16 +26,16 @@
 <div class="container-fluid">
 
   <!-- Page Heading -->
-  <h2 class="h2 mb-2 text-gray-800">本の一覧</h2>
-  <p class="mb-4">所持している本の一覧</p>
+  <h2 class="h2 mb-2 text-gray-800">購入済み商品の一覧</h2>
+  <p class="mb-4">購入情報の一覧です。</p>
 
   <!-- functions -->
-  <a class="btn btn-primary" href="/book/new/">追加</a>
+  <a class="btn btn-primary" href="/product/new/">追加</a>
 
   <!-- DataTales Example -->
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">本の一覧</h6>
+      <h6 class="m-0 font-weight-bold text-primary">購入済み商品</h6>
     </div>
     <div class="card-body">
 
@@ -46,14 +46,20 @@
             <th>題名</th>
             <th>著者</th>
             <th>サークル名</th>
+            <th>購入日</th>
+            <th>追加日</th>
+            <th>商品リンク</th>
           </tr>
         </thead>
         <tbody>
-          {% for books in books %}
+          {% for products in products %}
           <tr>
-            <td>{{books.title}}</td>
-            <td>{{books.author}}</td>
-            <td>{{books.circle}}</td>
+            <td>{{products.info.title}}</td>
+            <td>{{products.info.author}}</td>
+            <td>{{products.info.circle}}</td>
+            <td>{{products.date}}</td>
+            <td>{{products.added_date}}</td>
+            <td><a class="btn btn-link" href="{{products.url}}">link</a></td>
           </tr>
           {% endfor %}
         </tbody>
