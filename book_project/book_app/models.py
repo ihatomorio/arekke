@@ -1,6 +1,11 @@
+from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
+# 本の情報
 class Book(models.Model):
+    # 所有者
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # 書名
     title = models.CharField(max_length=256)
     # 著者
@@ -8,7 +13,11 @@ class Book(models.Model):
     # サークル名
     circle = models.CharField(max_length=256)
 
+    # 自身の情報
+    def __str__(self):
+        return self.title
 
+# 買ったもの
 class Product(models.Model):
 
     # 店舗の定数
@@ -21,6 +30,8 @@ class Product(models.Model):
     MELONBOOKS = 40
     TORANOANA = 50
     
+    # 所有者
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # 書籍情報
     info = models.ForeignKey('Book', on_delete=models.CASCADE)
     # 購入店舗
@@ -29,3 +40,9 @@ class Product(models.Model):
     url = models.URLField(max_length=512)
     # 購入日時
     date = models.DateTimeField(null=True, blank=True)
+    # 追加日時
+    added_date = models.DateTimeField(default=timezone.now)
+
+    # 自身の情報
+    def __str__(self):
+        return self.info.__str__()
