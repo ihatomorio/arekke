@@ -1,32 +1,23 @@
-<!DOCTYPE html>
-<html lang='ja'>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="">
+{% extends 'book_app/base.html' %}
 
-  <title>Book List</title>
-</head>
-<body>
-  <table>
-    <thead>
-      <tr>
-        <th>題名</th>
-        <th>著者</th>
-        <th>サークル名</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for books in books %}
-        <tr>
-          <td>{{books.title}}</td>
-          <td>{{books.author}}</td>
-          <td>{{books.circle}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-  </table>
-</body>
-</html>
+{% block content %}
+<h1>Book List</h1>
+<table>
+  <thead>
+    <tr>
+      <th>題名</th>
+      <th>著者</th>
+      <th>サークル名</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for books in books %}
+    <tr>
+      <td>{{books.title}}</td>
+      <td>{{books.author}}</td>
+      <td>{{books.circle}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
