@@ -49,7 +49,7 @@
             <th>サークル名</th>
             <th>購入日</th>
             <th>追加日</th>
-            <th>商品リンク</th>
+            <th>商品情報</th>
           </tr>
         </thead>
         <tbody>
@@ -61,7 +61,12 @@
             <td>{{products.info.circle}}</td>
             <td>{{products.date}}</td>
             <td>{{products.added_date}}</td>
-            <td><a class="btn btn-link" href="{{products.url}}">link</a></td>
+            <td><a class="btn btn-link" href="{{products.url}}">link</a>
+              <form method="POST">{% csrf_token %}
+                <input type="hidden" name="pk" value="{{products.pk}}">
+                <button type="submit" class="btn btn-primary">取得</button>
+              </form>
+            </td>
           </tr>
           {% endfor %}
         </tbody>

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db import models
 import book_app.models
 import book_app.forms
+from engine import webscraper
 
 def book_list(request):
     books = book_app.models.Book.objects.all()
@@ -26,6 +27,21 @@ def book_new(request):
 
 def product_list(request):
     products = book_app.models.Product.objects.all()
+    if request.method == "POST":
+        # POSTリクエストからpkを取り出す
+        pk_id = request.POST.get('pk',None)
+
+        # 指定のpkからobjを取り出す
+        obj = book_app.models.Product.objects.get(pk=pk_id)
+
+        # Webスクレイピングを実行
+        webscraper.get_single_item(obj)
+
+        # objを取得してきた情報で更新
+        obj.save()
+        obj.info.save()
+    else:
+        print("hoge")
     return render(request, 'book_app/product_list.html', {'products': products})
 
 
