@@ -68,7 +68,7 @@
             <tbody>
               {% for products in products %}
               <tr>
-                <td><img src="../..{{ MEDIA_URL }}{{ products.image_path }}" height="100"></i></td>
+                <td><img src="{{ MEDIA_URL }}{{ products.image_path }}" height="100"></i></td>
                 <td>{{products.info.title}}</td>
                 <td>{{products.info.author}}</td>
                 <td>{{products.info.circle}}</td>
