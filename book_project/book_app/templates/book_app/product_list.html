@@ -68,17 +68,19 @@
             <tbody>
               {% for products in products %}
               <tr>
-                <td><img src="{{ MEDIA_URL }}{{ products.image_path }}" height="100"></i></td>
+                <td>{% if products.image_path %}<img src="{{ MEDIA_URL }}{{ products.image_path }}" height="100"></img>{% endif %}</td>
                 <td>{{products.info.title}}</td>
                 <td>{{products.info.author}}</td>
                 <td>{{products.info.circle}}</td>
                 <td>{{products.date}}</td>
                 <td>{{products.added_date}}</td>
-                <td><a class="btn btn-link" href="{{products.url}}">link</a>
+                <td>{% if products.url %}
+                  <a class="btn btn-link" href="{{products.url}}">link</a>
                   <form method="POST">{% csrf_token %}
                     <input type="hidden" name="pk" value="{{products.pk}}">
                     <button type="submit" class="btn btn-primary">取得</button>
                   </form>
+                  {% endif %}
                 </td>
               </tr>
               {% endfor %}
