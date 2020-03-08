@@ -1,7 +1,8 @@
-import re, os
+import re
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import chromedriver_binary
+from django.conf import settings
 from engine import webscraper
 #画像保存用
 import urllib.request
@@ -42,10 +43,8 @@ def get_product_info(obj):
     filename = re.findall(r'https://.*/(.*\.jpg)', url)
     print(filename[0])
 
-    # 保存用パスを生成
-    path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    path += "/../media/fanza_doujin/" + filename[0]
+    # 保存用パスを生成 MEDIA_ROOT = '/root/repos/websq/book_project/media'
+    path = settings.MEDIA_ROOT + "/fanze_doujin/" + filename[0]
     print(path)
 
     # 画像を保存用パスへダウンロード
