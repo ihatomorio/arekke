@@ -21,59 +21,88 @@
 </script>
 {% endblock %}
 
-<!-- Main Content Start -->
 {% block content %}
-<div class="container-fluid">
 
-  <!-- Page Heading -->
-  <h2 class="h2 mb-2 text-gray-800">購入済み商品の一覧</h2>
-  <p class="mb-4">購入情報の一覧です。</p>
+<!-- Sidebar -->
+<!-- End of Sidebar -->
 
-  <!-- functions -->
-  <a class="btn btn-primary" href="/product/new/">追加</a>
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
 
-  <!-- DataTales Example -->
-  <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">購入済み商品</h6>
+  <!-- Main Content -->
+  <div id="content">
+
+    <!-- Topbar -->
+    <!-- End of Topbar -->
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+      <!-- Page Heading -->
+      <h2 class="h2 mb-2 text-gray-800">購入済み商品の一覧</h2>
+      <p class="mb-4">購入情報の一覧です。</p>
+
+      <!-- functions -->
+      <a class="btn btn-primary" href="/product/new/">追加</a>
+
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">購入済み商品</h6>
+        </div>
+        <div class="card-body">
+
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            </tableclass>
+            <thead>
+              <tr>
+                <th>表紙</th>
+                <th>題名</th>
+                <th>著者</th>
+                <th>サークル名</th>
+                <th>購入日</th>
+                <th>追加日</th>
+                <th>商品情報</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for products in products %}
+              <tr>
+                <td><img src="../..{{ MEDIA_URL }}{{ products.image_path }}" height="100"></i></td>
+                <td>{{products.info.title}}</td>
+                <td>{{products.info.author}}</td>
+                <td>{{products.info.circle}}</td>
+                <td>{{products.date}}</td>
+                <td>{{products.added_date}}</td>
+                <td><a class="btn btn-link" href="{{products.url}}">link</a>
+                  <form method="POST">{% csrf_token %}
+                    <input type="hidden" name="pk" value="{{products.pk}}">
+                    <button type="submit" class="btn btn-primary">取得</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
-    <div class="card-body">
+    <!-- /.container-fluid -->
 
-      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-        </tableclass>
-        <thead>
-          <tr>
-            <th>表紙</th>
-            <th>題名</th>
-            <th>著者</th>
-            <th>サークル名</th>
-            <th>購入日</th>
-            <th>追加日</th>
-            <th>商品情報</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for products in products %}
-          <tr>
-            <td><img src="../..{{ MEDIA_URL }}{{ products.image_path }}" height="100"></i></td>
-            <td>{{products.info.title}}</td>
-            <td>{{products.info.author}}</td>
-            <td>{{products.info.circle}}</td>
-            <td>{{products.date}}</td>
-            <td>{{products.added_date}}</td>
-            <td><a class="btn btn-link" href="{{products.url}}">link</a>
-              <form method="POST">{% csrf_token %}
-                <input type="hidden" name="pk" value="{{products.pk}}">
-                <button type="submit" class="btn btn-primary">取得</button>
-              </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
   </div>
+  <!-- End of Main Content -->
+
+  <!-- Footer -->
+  <footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+      <div class="copyright text-center my-auto">
+        <span>Copyright &copy; Your Website 2019</span>
+      </div>
+    </div>
+  </footer>
+  <!-- End of Footer -->
 
 </div>
-<!-- Main Content End -->
+<!-- End of Content Wrapper -->
 {% endblock %}
