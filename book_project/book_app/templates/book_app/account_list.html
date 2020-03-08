@@ -1,0 +1,71 @@
+{% extends 'book_app/base.html' %}
+{% load static %}
+
+<!-- title block -->
+{% block title %} - Account List{% endblock %}
+
+<!-- Custom styles for this page -->
+{% block pagecss %}
+<link href="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+<!-- Page level plugins -->
+{% block pageplugin %}
+<script src="{% static 'bootstrap/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+  // Call the dataTables jQuery plugin
+  $(document).ready(function () {
+    $('#dataTable').DataTable();
+  });
+</script>
+{% endblock %}
+
+<!-- Main Content Start -->
+{% block content %}
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <h2 class="h2 mb-2 text-gray-800">アカウントの一覧</h2>
+  <p class="mb-4">連携しているアカウントの一覧</p>
+
+  <!-- functions -->
+  <a class="btn btn-primary" href="/account/new/">追加</a>
+
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">アカウント一覧</h6>
+    </div>
+    <div class="card-body">
+
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        </tableclass>
+        <thead>
+          <tr>
+            <th>店舗</th>
+            <th>最終取得日時</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for accounts in accounts %}
+          <tr>
+            <td>{{accounts.get_shop_display}}</td>
+            <td>{{accounts.date}}</td>
+            <td>
+              <form method="POST">{% csrf_token %}
+                <input type="hidden" name="pk" value="{{accounts.pk}}">
+                <button type="submit" class="btn btn-primary">取得</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+<!-- Main Content End -->
+{% endblock %}

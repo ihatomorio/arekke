@@ -1,12 +1,22 @@
-import re
-import os
+import re, os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import chromedriver_binary
+from engine import webscraper
 #画像保存用
 import urllib.request
 
-def get_single_item(driver, obj):
+def get_product_info(obj):
+    # ブラウザーを起動
+    options = Options()
+    options.binary_location = '/opt/google/chrome-beta/google-chrome-beta'
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox') #rootに必要
+    driver = webdriver.Chrome(options=options)
+
+    # Webページにアクセス
+    driver.get(obj.url)
+
     # タイトルに'FANZA電子書籍'が含まれていることを確認する。
     assert 'FANZA電子書籍' in driver.title
 
@@ -46,3 +56,6 @@ def get_single_item(driver, obj):
 
     # DBのパスを更新
     obj.image_path = "fanza_comic/" + filename[0]
+    
+    # ブラウザを閉じる
+    webscraper.close_browser(driver)

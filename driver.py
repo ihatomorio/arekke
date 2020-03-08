@@ -1,4 +1,4 @@
-import book_project.engine.get_single_items
+import book_project.engine.webscraper
 
 
 # url = 'https://booth.pm/ja/items/813108' #マステ
@@ -9,4 +9,4 @@ url = 'https://booth.pm/ja/items/1393407'
 # url = 'https://www.melonbooks.co.jp/detail/detail.php?product_id=633353
 # url = 'https://book.dmm.co.jp/detail/b158aakn00788/' #COMIC LO 2019年11月号
 
-book_project.engine.get_single_items.get_single_item(url)
+book_project.engine.webscraper.get_product_info(url)

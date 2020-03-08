@@ -1,5 +1,4 @@
-import re
-import os
+import re, os
 
 s = "https://booth.pximg.net/e8e75036-3788-4cff-b6ac-97397dd0f50a/i/1759716/53acb9de-94cd-4146-9aaf-07e663e20941_base_resized.jpg"
 
