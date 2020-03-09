@@ -22,79 +22,50 @@
 {% endblock %}
 
 {% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
 
-<!-- Sidebar -->
-<!-- End of Sidebar -->
+  <!-- Page Heading -->
+  <h2 class="h2 mb-2 text-gray-800">アカウントの一覧</h2>
+  <p class="mb-4">連携しているアカウントの一覧</p>
 
-<!-- Content Wrapper -->
-<div id="content-wrapper" class="d-flex flex-column">
+  <!-- functions -->
+  <a class="btn btn-primary" href="/account/new/">追加</a>
 
-  <!-- Main Content -->
-  <div id="content">
-
-    <!-- Topbar -->
-    <!-- End of Topbar -->
-
-    <!-- Begin Page Content -->
-    <div class="container-fluid">
-
-      <!-- Page Heading -->
-      <h2 class="h2 mb-2 text-gray-800">アカウントの一覧</h2>
-      <p class="mb-4">連携しているアカウントの一覧</p>
-
-      <!-- functions -->
-      <a class="btn btn-primary" href="/account/new/">追加</a>
-
-      <!-- DataTales Example -->
-      <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">アカウント一覧</h6>
-        </div>
-        <div class="card-body">
-
-          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-            </tableclass>
-            <thead>
-              <tr>
-                <th>店舗</th>
-                <th>最終取得日時</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for accounts in accounts %}
-              <tr>
-                <td>{{accounts.get_shop_display}}</td>
-                <td>{{accounts.date}}</td>
-                <td>
-                  <form method="POST">{% csrf_token %}
-                    <input type="hidden" name="pk" value="{{accounts.pk}}">
-                    <button type="submit" class="btn btn-primary">取得</button>
-                  </form>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">アカウント一覧</h6>
     </div>
-    <!-- /.container-fluid -->
+    <div class="card-body">
 
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        </tableclass>
+        <thead>
+          <tr>
+            <th>店舗</th>
+            <th>最終取得日時</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for accounts in accounts %}
+          <tr>
+            <td>{{accounts.get_shop_display}}</td>
+            <td>{{accounts.date}}</td>
+            <td>
+              <form method="POST">{% csrf_token %}
+                <input type="hidden" name="pk" value="{{accounts.pk}}">
+                <button type="submit" class="btn btn-primary">取得</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
-  <!-- End of Main Content -->
-
-  <!-- Footer -->
-  <footer class="sticky-footer bg-white">
-    <div class="container my-auto">
-      <div class="copyright text-center my-auto">
-        <span>Copyright &copy; Your Website 2019</span>
-      </div>
-    </div>
-  </footer>
-  <!-- End of Footer -->
 
 </div>
-<!-- End of Content Wrapper -->
+<!-- /.container-fluid -->
 {% endblock %}

@@ -22,86 +22,44 @@
 {% endblock %}
 
 {% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
 
-<!-- Sidebar -->
-<!-- End of Sidebar -->
+    <!-- Page Heading -->
+    <h2 class="h2 mb-2 text-gray-800">ログイン</h2>
+    <!-- login form -->
+    {% if form.errors %}
+    <p class="mb-4">落ち着いてユーザー名とパスワードを入力して欲しい。</p>
+    {% endif %}
 
-<!-- Content Wrapper -->
-<div id="content-wrapper" class="d-flex flex-column">
+    {% if next %}
+    {% if user.is_authenticated %}
+    <p class="mb-4">Your account doesn't have access to this page. To proceed,
+        please login with an account that has access.</p>
+    {% else %}
+    <p class="mb-4">Please login to see this page.</p>
+    {% endif %}
+    {% endif %}
 
-    <!-- Main Content -->
-    <div id="content">
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <table>
+                <tr>
+                    <td>{{ form.username.label_tag }}</td>
+                    <td>{{ form.username }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.password.label_tag }}</td>
+                    <td>{{ form.password }}</td>
+                </tr>
+            </table>
 
-        <!-- Topbar -->
-        <!-- End of Topbar -->
-
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-
-            <!-- Page Heading -->
-            <h2 class="h2 mb-2 text-gray-800">ログイン</h2>
-            <header>
-
-                <nav>
-                    <ul>
-                        {% if user.is_authenticated %}
-                        <li><a href="{% url 'logout' %}" class="logout">Logout</a></li>
-                        {% else %}
-
-                        <li><a href="{% url 'login' %}" class="login">Login</a></li>
-                        {% endif %}
-
-                    </ul>
-                </nav>
-            </header>
-
-            <!-- login form -->
-            {% if form.errors %}
-            <p>Your username and password didn't match. Please try again.</p>
-            {% endif %}
-
-            {% if next %}
-            {% if user.is_authenticated %}
-            <p>Your account doesn't have access to this page. To proceed,
-                please login with an account that has access.</p>
-            {% else %}
-            <p>Please login to see this page.</p>
-            {% endif %}
-            {% endif %}
-
-            <form method="post" action="{% url 'login' %}">
-                {% csrf_token %}
-                <table>
-                    <tr>
-                        <td>{{ form.username.label_tag }}</td>
-                        <td>{{ form.username }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ form.password.label_tag }}</td>
-                        <td>{{ form.password }}</td>
-                    </tr>
-                </table>
-
-                <input type="submit" value="login" />
-                <input type="hidden" name="next" value="{{ next }}" />
-            </form>
-
+            <input type="submit" class="btn btn-primary" value="ログイン" />
+            <input type="hidden" name="next" value="{{ next }}" />
         </div>
-        <!-- /.container-fluid -->
-
-    </div>
-    <!-- End of Main Content -->
-
-    <!-- Footer -->
-    <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-                <span>Copyright &copy; Your Website 2019</span>
-            </div>
-        </div>
-    </footer>
-    <!-- End of Footer -->
+    </form>
 
 </div>
-<!-- End of Content Wrapper -->
+<!-- /.container-fluid -->
 {% endblock %}
