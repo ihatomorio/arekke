@@ -1,0 +1,107 @@
+{% extends 'book_app/base.html' %}
+{% load static %}
+
+<!-- title block -->
+{% block title %} - Account List{% endblock %}
+
+<!-- Custom styles for this page -->
+{% block pagecss %}
+<link href="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+<!-- Page level plugins -->
+{% block pageplugin %}
+<script src="{% static 'bootstrap/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+    // Call the dataTables jQuery plugin
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<!-- Sidebar -->
+<!-- End of Sidebar -->
+
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+
+        <!-- Topbar -->
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <h2 class="h2 mb-2 text-gray-800">ログイン</h2>
+            <header>
+
+                <nav>
+                    <ul>
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url 'logout' %}" class="logout">Logout</a></li>
+                        {% else %}
+
+                        <li><a href="{% url 'login' %}" class="login">Login</a></li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            </header>
+
+            <!-- login form -->
+            {% if form.errors %}
+            <p>Your username and password didn't match. Please try again.</p>
+            {% endif %}
+
+            {% if next %}
+            {% if user.is_authenticated %}
+            <p>Your account doesn't have access to this page. To proceed,
+                please login with an account that has access.</p>
+            {% else %}
+            <p>Please login to see this page.</p>
+            {% endif %}
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <td>{{ form.username.label_tag }}</td>
+                        <td>{{ form.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.password.label_tag }}</td>
+                        <td>{{ form.password }}</td>
+                    </tr>
+                </table>
+
+                <input type="submit" value="login" />
+                <input type="hidden" name="next" value="{{ next }}" />
+            </form>
+
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright &copy; Your Website 2019</span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+
+</div>
+<!-- End of Content Wrapper -->
+{% endblock %}
