@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 from .models import Book, Product, Account
 from .forms import BookForm, ProductForm, AccountForm
 from engine import webscraper
 
+@login_required
 def book_list(request):
-    books = Book.objects.all()
+    books = Book.objects.filter(owner=request.user)
     return render(request, 'book_app/book_list.html', {'books': books})
 
-
+@login_required
 def book_new(request):
     if request.method == "POST":
         form = BookForm(request.POST)
@@ -23,9 +25,9 @@ def book_new(request):
         form = BookForm()
     return render(request, 'book_app/book_new.html', {'form': form})
 
-
+@login_required
 def product_list(request):
-    products = Product.objects.all()
+    products = Product.objects.filter(owner=request.user)
     if request.method == "POST":
         # POSTリクエストからpkを取り出す
         pk_id = request.POST.get('pk',None)
@@ -45,7 +47,7 @@ def product_list(request):
     
     return render(request, 'book_app/product_list.html', {'products': products})
 
-
+@login_required
 def product_new(request):
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
@@ -61,9 +63,9 @@ def product_new(request):
         form = ProductForm()
     return render(request, 'book_app/product_new.html', {'form': form})
 
-
+@login_required
 def account_list(request):
-    accounts = Account.objects.all()
+    accounts = Account.objects.filter(owner=request.user)
     if request.method == "POST":
         # POSTリクエストからpkを取り出す
         pk_id = request.POST.get('pk',None)
@@ -83,7 +85,7 @@ def account_list(request):
     
     return render(request, 'book_app/account_list.html', {'accounts': accounts})
 
-
+@login_required
 def account_new(request):
     if request.method == "POST":
         form = AccountForm(request.POST)
