@@ -9,7 +9,7 @@ from engine import webscraper
 #画像保存用
 import urllib.request
 # DB操作
-from book_app.models import Book, Product
+from book_app.models import Product
 from book_app import views
 
 def get_product_info(product):
@@ -28,13 +28,13 @@ def get_product_info(product):
 
     # 商品名を取得
     title_element = driver.find_element_by_xpath('//*[@id="work_name"]/a')
-    product.info.title = title_element.text
-    print(product.info.title)
+    product.title = title_element.text
+    print(product.title)
 
     # ショップ名称を取得
     shop_name_element = driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr/td/span/a')
-    product.info.circle = shop_name_element.text
-    print(product.info.circle)
+    product.circle = shop_name_element.text
+    print(product.circle)
 
     # 画像保存
     image_element = driver.find_element_by_xpath("/html/body/div[3]/div[4]/div[1]/div/div[1]/div[1]/div/div/div[2]/div/div[1]/div[1]/ul/li[1]/img") #Unable to locate element:

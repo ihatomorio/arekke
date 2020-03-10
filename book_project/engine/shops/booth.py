@@ -11,7 +11,7 @@ import urllib.request
 def get_product_info(product):
     # ブラウザーを起動
     options = Options()
-    options.binary_location = '/opt/google/chrome-beta/google-chrome-beta'
+    options.binary_location = '/usr/bin/google-chrome-beta'
     options.add_argument('--headless')
     options.add_argument('--no-sandbox') #rootに必要
     driver = webdriver.Chrome(options=options)
@@ -24,13 +24,13 @@ def get_product_info(product):
 
     # 商品名を取得
     title_element = driver.find_element_by_css_selector(".u-text-wrap.u-tpg-title1.u-mt-0.u-mb-400") # countermeasure spacing
-    product.info.title = title_element.text
-    print(product.info.title)
+    product.title = title_element.text
+    print(product.title)
 
     # ショップ名称を取得
     shop_name_element = driver.find_element_by_class_name("u-text-ellipsis")
-    product.info.circle = shop_name_element.text
-    print(product.info.circle)
+    product.circle = shop_name_element.text
+    print(product.circle)
 
     # 画像保存
     image_element = driver.find_element_by_css_selector('body > div.page-wrap > main > div.market-item-detail.u-bg-white > article > div > div.u-bg-white.u-pt-600.u-px-700 > div.container > div > div.u-order-0.l-col-3of5.u-pr-500 > div.primary-image-area.slick-initialized.slick-slider > div > div > div.slick-slide.slick-current.slick-active > div > div > div > img') #OK

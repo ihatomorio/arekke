@@ -1,4 +1,4 @@
-{% extends 'book_app/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 <!-- title block -->
@@ -57,9 +57,9 @@
           <tr>
             <td>{% if products.image_path %}<img src="{{ MEDIA_URL }}{{ products.image_path }}"
                 height="100"></img>{% endif %}</td>
-            <td>{{products.info.title}}</td>
-            <td>{{products.info.author}}</td>
-            <td>{{products.info.circle}}</td>
+            <td>{{products.title}}</td>
+            <td>{{products.author}}</td>
+            <td>{{products.circle}}</td>
             <td>{{products.date}}</td>
             <td>{{products.added_date}}</td>
             <td>{% if products.url %}

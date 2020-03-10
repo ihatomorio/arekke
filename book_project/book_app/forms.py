@@ -1,16 +1,54 @@
 from django import forms
-from .models import Book, Product, Account
-
-class BookForm(forms.ModelForm):
-    class Meta:
-        model = Book
-        fields = ('title', 'author', 'circle')
+from .models import Product, Account
 
 
-class ProductForm(forms.ModelForm):
+class ProductForm(forms.Form):
+    shop = forms.ChoiceField(
+        label = 'サイト',
+        widget=forms.Select,
+        choices=Account.SHOPS,
+        required=True,
+    )
+
+    url = forms.URLField(
+        label='URL',
+        max_length=512,
+        required=False,
+    )
+
+    title = forms.CharField(
+        label='書名',
+        max_length=256,
+        required=True,
+    )
+
+    author = forms.CharField(
+        label='著者',
+        max_length=256,
+        required=False,
+    )
+    
+    circle = forms.CharField(
+        label='書名',
+        max_length=256,
+        required=False,
+    )
+    
+    date = forms.DateField(
+        label='購入日',
+        required=False,
+    )
+
+    image_path=forms.ImageField(
+        required=False,
+    )
+
     class Meta:
         model = Product
-        fields = ('info', 'shop', 'url', 'date', 'image_path')
+
+    # class Meta:
+    #     model = Product
+    #     fields = ('title', 'author', 'circle' 'shop', 'url', 'date', 'image_path')
 
 
 class AccountForm(forms.Form):

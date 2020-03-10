@@ -2,28 +2,9 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from .models import Book, Product, Account
-from .forms import BookForm, ProductForm, AccountForm
+from .models import Product, Account
+from . import forms
 from engine import webscraper
-
-@login_required
-def book_list(request):
-    books = Book.objects.filter(owner=request.user)
-    return render(request, 'book_app/book_list.html', {'books': books})
-
-@login_required
-def book_new(request):
-    if request.method == "POST":
-        form = BookForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.owner = request.user
-            post.save()
-
-            return redirect('/book/list/', pk=post.pk)
-    else:
-        form = BookForm()
-    return render(request, 'book_app/book_new.html', {'form': form})
 
 @login_required
 def product_list(request):
@@ -40,7 +21,6 @@ def product_list(request):
 
         # objを取得してきた情報で確定
         obj.save()
-        obj.info.save()
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/product/list/')
@@ -50,17 +30,26 @@ def product_list(request):
 @login_required
 def product_new(request):
     if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES)
+        form = forms.ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.owner = request.user
-            post.added_date = timezone.now()
+            # post = form.save(commit=False)
+            cd = form.cleaned_data
+            post = Product.objects.create(
+                owner=request.user,
+                shop = cd['shop'],
+                url = cd['url'],
+                title = cd['title'],
+                author = cd['author'],
+                added_date = timezone.now(),
+            )
+            # post.owner = request.user
+            # post.added_date = timezone.now()
             # post.image_path = request.FILES['file']
-            post.save()
+            # post.save()
 
             return redirect('/product/list/', pk=post.pk)
     else:
-        form = ProductForm()
+        form = forms.ProductForm()
     return render(request, 'book_app/product_new.html', {'form': form})
 
 @login_required
@@ -113,15 +102,10 @@ def CreateFromUrl(url, request):
     if Product.objects.filter(url=url):
         return -1
 
-    info = Book.objects.create(
-        owner = request.user,
-    )
     product = Product.objects.create(
         owner = request.user,
-        info = info,
         shop = 0,
         url = url
     )
     webscraper.get_product_info(product)
-    info.save()
     product.save()
