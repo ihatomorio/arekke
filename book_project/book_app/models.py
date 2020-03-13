@@ -19,9 +19,9 @@ class Product(models.Model):
         (NONE, "なし"),
         (BOOTH, "BOOTH"),
         (DLSITE, "DLSite"),
-        (FANZA_DOUJIN, "FANZA電子書籍"),
-        (MELONBOOKS, "FANZA同人"),
-        (TORANOANA, "メロンブックス"),
+        (FANZA_COMIC, "FANZA電子書籍"),
+        (FANZA_DOUJIN, "FANZA同人"),
+        (MELONBOOKS, "メロンブックス"),
     )
     
     # 所有者

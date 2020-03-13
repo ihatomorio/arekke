@@ -54,10 +54,14 @@
             <td>{{accounts.get_shop_display}}</td>
             <td>{{accounts.date}}</td>
             <td>
+              {% if accounts.shop == 20 or accounts.shop == 31 %}
               <form method="POST">{% csrf_token %}
                 <input type="hidden" name="pk" value="{{accounts.pk}}">
                 <button type="submit" class="btn btn-primary">取得</button>
               </form>
+              {% else %}
+              <button type="button" class="btn btn-primary" disabled>取得</button>
+              {% endif %}
             </td>
           </tr>
           {% endfor %}
