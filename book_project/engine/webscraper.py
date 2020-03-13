@@ -20,14 +20,14 @@ def get_product_info(product):
 
 def get_product_list(account, request):
     # サイト別に取得する
-    if account.shop == models.Account.BOOTH:
-        shops.booth.get_product_list(account, request)
-    elif account.shop == models.Account.DLSITE:
+    # if account.shop == models.Account.BOOTH:
+        # shops.booth.get_product_list(account, request)
+    if account.shop == models.Account.DLSITE:
         shops.dlsite.get_product_list(account, request)
+    elif account.shop == models.Account.FANZA_DOUJIN:
+        shops.fanza_doujin.get_product_list(account, request)
     # elif account.shop == models.Account.FANZA_COMIC:
     #     shops.fanza_comic.get_product_list(account, request)
-    # elif account.shop == models.Account.FANZA_DOUJIN:
-    #     shops.fanza_doujin.get_product_list(account, request)
     # elif account.shop == models.Account.MELONBOOKS:
     #     shops.melonbooks.get_product_list(account, request)
 

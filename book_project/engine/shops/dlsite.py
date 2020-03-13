@@ -57,6 +57,9 @@ def get_product_info(product):
     # DBのパスを更新
     product.image_path = "dlsite/" + filename[0]
 
+    # shop番号を更新
+    product.shop = Product.DLSITE
+    
     # ブラウザを閉じる
     webscraper.close_browser(driver)
 
@@ -108,7 +111,7 @@ def get_product_list(account, request):
     driver.find_element_by_id('_display').click()
     
     # スクリーンショットを撮る。
-    driver.save_screenshot('page_screenshot.png')
+    # driver.save_screenshot('page_screenshot.png')
 
     # 表からURLとタイトル一覧の取得し保存
     product_elements = driver.find_elements_by_class_name('work_name')

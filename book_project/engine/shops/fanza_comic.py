@@ -1,6 +1,7 @@
 import re
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import NoSuchElementException
 import chromedriver_binary
 from django.conf import settings
 from engine import webscraper
@@ -23,8 +24,8 @@ def get_product_info(obj):
 
     # 商品名を取得
     title_element = driver.find_element_by_css_selector('#title')
-    obj.info.title = title_element.text
-    print(obj.info.title)
+    obj.title = title_element.text
+    print(obj.title)
 
     # 作者を取得
     shop_name_element = driver.find_element_by_class_name("m-boxDetailProductInfoMainList__description__list")
@@ -32,8 +33,8 @@ def get_product_info(obj):
     print(obj.info.author)
     
     # シリーズ名を取得
-    obj.info.circle = ""
-    print(obj.info.circle)
+    obj.circle = ""
+    print(obj.circle)
 
     # 画像保存
     image_element = driver.find_element_by_class_name("m-imgDetailProductPack") #None

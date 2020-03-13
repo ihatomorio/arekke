@@ -53,7 +53,10 @@
         <td>{% if products.image_path %}<img src="{{ MEDIA_URL }}{{ products.image_path }}"
             height="100"></img>{% endif %}</td>
         {% if products.url %}
-        <td><a href="{{products.url}}">{{products.title}}</a></td>
+        <td>
+          {% if products.shop %}<span class="badge badge-primary">{{products.get_shop_display}}</span><br>{% endif %}
+          <a href="{{products.url}}">{{products.title}}</a>
+        </td>
         {% else %}
         <td>{{products.title}}</td>
         {% endif %}

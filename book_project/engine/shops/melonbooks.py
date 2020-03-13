@@ -23,13 +23,13 @@ def get_product_info(obj):
 
     # 商品名を取得
     title_element = driver.find_element_by_xpath('//*[@id="title"]/div/div[1]/div[1]/h1')
-    obj.info.title = title_element.text
-    print(obj.info.title)
+    obj.title = title_element.text
+    print(obj.title)
 
     # サークル名称を取得
     shop_name_element = driver.find_element_by_xpath('//*[@id="title"]/div/div[2]/div[1]/div/a')
-    obj.info.circle = shop_name_element.text
-    print(obj.info.circle)
+    obj.circle = shop_name_element.text
+    print(obj.circle)
 
     # 作家名を取得
     author_element = driver.find_element_by_xpath('//*[@id="description"]/table/tbody/tr[3]/td/a')
