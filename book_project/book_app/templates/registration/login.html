@@ -33,15 +33,14 @@
 
     <!-- login form -->
     {% if form.errors %}
-    <p class="mb-4">落ち着いてユーザー名とパスワードを入力して欲しい。</p>
+    <p class="text-danger">ユーザー名またはパスワードが違います。</p>
     {% endif %}
 
     {% if next %}
     {% if user.is_authenticated %}
-    <p class="mb-4">Your account doesn't have access to this page. To proceed,
-        please login with an account that has access.</p>
+    <p class="text-warning">このアカウントはこのページに対するアクセス権を持ちません。別のアカウントでログインしてください。</p>
     {% else %}
-    <p class="mb-4">Please login to see this page.</p>
+    <p class="text-info">ログインしてください。</p>
     {% endif %}
     {% endif %}
 
