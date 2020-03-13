@@ -23,7 +23,7 @@
 
 {% block content %}
 <!-- Begin Page Content -->
-<div class="container-fluid">
+<div class="text-center">
 
     <!-- Page Heading -->
     <h2 class="h2 mb-2 text-gray-800">ログイン</h2>
@@ -33,14 +33,14 @@
 
     <!-- login form -->
     {% if form.errors %}
-    <p class="text-danger">ユーザー名またはパスワードが違います。</p>
+    <div class="alert alert-danger" role="alert">ユーザー名またはパスワードが違います。</div>
     {% endif %}
 
     {% if next %}
     {% if user.is_authenticated %}
-    <p class="text-warning">このアカウントはこのページに対するアクセス権を持ちません。別のアカウントでログインしてください。</p>
+    <div class="alert alert-warning" role="alert">このアカウントはこのページに対するアクセス権を持ちません。別のアカウントでログインしてください。</div>
     {% else %}
-    <p class="text-info">ログインしてください。</p>
+    <div class="alert alert-info" role="alert">ログインしてください。</div>
     {% endif %}
     {% endif %}
 
