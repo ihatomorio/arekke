@@ -77,7 +77,7 @@ def account_list(request):
 @login_required
 def account_new(request):
     if request.method == "POST":
-        form = AccountForm(request.POST)
+        form = forms.AccountForm(request.POST)
         if form.is_valid():
             account = Account()
             account.shop = form.cleaned_data['shop']
@@ -93,7 +93,7 @@ def account_new(request):
 
             return redirect('/account/list/')
     else:
-        form = AccountForm()
+        form = forms.AccountForm()
     return render(request, 'book_app/account_new.html', {'form': form})
 
 
