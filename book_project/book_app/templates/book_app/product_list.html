@@ -33,49 +33,46 @@
   <a class="btn btn-primary" href="/product/new/">追加</a>
 
   <!-- DataTales Example -->
-  <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">購入済み商品</h6>
-    </div>
-    <div class="card-body">
 
-      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-        </tableclass>
-        <thead>
-          <tr>
-            <th>表紙</th>
-            <th width="20%">題名</th>
-            <th width="20%">著者</th>
-            <th width="20%">サークル名</th>
-            <th>購入日</th>
-            <th>追加日</th>
-            <th>商品情報</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for products in products %}
-          <tr>
-            <td>{% if products.image_path %}<img src="{{ MEDIA_URL }}{{ products.image_path }}"
-                height="100"></img>{% endif %}</td>
-            <td>{{products.title}}</td>
-            <td>{{products.author}}</td>
-            <td>{{products.circle}}</td>
-            <td>{{products.date}}</td>
-            <td>{{products.added_date}}</td>
-            <td>{% if products.url %}
-              <a class="btn btn-link" href="{{products.url}}">link</a>
-              <form method="POST">{% csrf_token %}
-                <input type="hidden" name="pk" value="{{products.pk}}">
-                <button type="submit" class="btn btn-primary">取得</button>
-              </form>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    </tableclass>
+    <thead>
+      <tr>
+        <th width="120px">表紙</th>
+        <th width="20%">題名</th>
+        <th width="20%">著者</th>
+        <th width="20%">サークル名</th>
+        <th>購入日</th>
+        <th>追加日</th>
+        <th>商品情報</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for products in products %}
+      <tr>
+        <td>{% if products.image_path %}<img src="{{ MEDIA_URL }}{{ products.image_path }}"
+            height="100"></img>{% endif %}</td>
+        {% if products.url %}
+        <td><a href="{{products.url}}">{{products.title}}</a></td>
+        {% else %}
+        <td>{{products.title}}</td>
+        {% endif %}
+        <td>{{products.author}}</td>
+        <td>{{products.circle}}</td>
+        <td>{{products.date}}</td>
+        <td>{{products.added_date}}</td>
+        <td>{% if products.url %}
+          <form method="POST">{% csrf_token %}
+            <input type="hidden" name="pk" value="{{products.pk}}">
+            <button type="submit" class="btn btn-primary">更新</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 
 </div>
 <!-- /.container-fluid -->
