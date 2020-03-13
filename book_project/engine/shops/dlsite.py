@@ -107,6 +107,10 @@ def get_product_list(account, request):
     select_elemet = Select(driver.find_element_by_id('_start'))
     select_elemet.select_by_value('all')
 
+    # 並び順: 古い順を選択
+    select_elemet = Select(driver.find_element_by_name('sort'))
+    select_elemet.select_by_value('2')
+
     # 表示 をクリック
     driver.find_element_by_id('_display').click()
     
