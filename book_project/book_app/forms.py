@@ -29,7 +29,7 @@ class ProductForm(forms.Form):
     )
     
     circle = forms.CharField(
-        label='書名',
+        label='サークル名',
         max_length=256,
         required=False,
     )
@@ -40,6 +40,7 @@ class ProductForm(forms.Form):
     )
 
     image_path=forms.ImageField(
+        label='ファイルを選択',
         required=False,
     )
 

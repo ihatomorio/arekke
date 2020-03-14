@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from .models import Product, Account
+from book_app.models import Product, Account
 from . import forms
 from engine import webscraper
+from concurrent import futures
 
 @login_required
 def product_list(request):
@@ -13,14 +14,11 @@ def product_list(request):
         # POSTリクエストからpkを取り出す
         pk_id = request.POST.get('pk',None)
 
-        # 指定のpkからobjを取り出す
-        obj = Product.objects.get(pk=pk_id)
+        # 指定のpkからproductを取り出す
+        product = Product.objects.get(pk=pk_id)
 
-        # Webスクレイピングを実行
-        webscraper.get_product_info(obj)
-
-        # objを取得してきた情報で確定
-        obj.save()
+        # 並列処理で商品情報を取得する
+        futures.ThreadPoolExecutor(max_workers=4).submit(fn=GetFromObjsUrl, obj=product)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/product/list/')
@@ -42,10 +40,6 @@ def product_new(request):
                 author = cd['author'],
                 added_date = timezone.now(),
             )
-            # post.owner = request.user
-            # post.added_date = timezone.now()
-            # post.image_path = request.FILES['file']
-            # post.save()
 
             return redirect('/product/list/', pk=post.pk)
     else:
@@ -60,14 +54,10 @@ def account_list(request):
         pk_id = request.POST.get('pk',None)
 
         # 指定のpkからobjを取り出す
-        obj = Account.objects.get(pk=pk_id)
+        account = Account.objects.get(pk=pk_id)
 
         # Webスクレイピングを実行
-        webscraper.get_product_list(obj, request)
-
-        # objを取得してきた情報で確定
-        obj.date = timezone.now()
-        obj.save()
+        futures.ThreadPoolExecutor(max_workers=4).submit(fn=GetProductList, account=account, request=request)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/account/list/')
@@ -79,22 +69,35 @@ def account_new(request):
     if request.method == "POST":
         form = forms.AccountForm(request.POST)
         if form.is_valid():
-            account = Account()
-            account.shop = form.cleaned_data['shop']
-            account.user = form.cleaned_data['user']
-            account.password = form.cleaned_data['password']
-
+            # アカウントを作って保存
             Account.objects.create(
                 owner = request.user,
-                shop = account.shop,
-                user = account.user,
-                password = account.password,
+                shop = form.cleaned_data['shop'],
+                user = form.cleaned_data['user'],
+                password = form.cleaned_data['password'],
             )
 
             return redirect('/account/list/')
     else:
         form = forms.AccountForm()
     return render(request, 'book_app/account_new.html', {'form': form})
+
+
+def GetFromObjsUrl(obj):
+    # Webスクレイピングを実行
+    webscraper.get_product_info(obj)
+
+    # objを取得してきた情報で確定
+    obj.save()
+
+
+def GetProductList(account, request):
+    # webスクレイピング
+    webscraper.get_product_list(account, request)
+
+    # objを取得してきた情報で確定
+    account.date = timezone.now()
+    account.save()
 
 
 def CreateFromUrl(url, request):
@@ -107,5 +110,6 @@ def CreateFromUrl(url, request):
         shop = 0,
         url = url
     )
-    webscraper.get_product_info(product)
-    product.save()
+
+    # 並列処理で商品情報を取得する
+    futures.ThreadPoolExecutor(max_workers=4).submit(fn=GetFromObjsUrl, obj=product)

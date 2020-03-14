@@ -7,6 +7,7 @@ from django.conf import settings
 from engine import webscraper
 #画像保存用
 import urllib.request
+from book_app.models import Product
 
 def get_product_info(product):
     # ブラウザーを起動
@@ -53,6 +54,9 @@ def get_product_info(product):
     # DBのパスを更新
     product.image_path = "booth/" + filename[0]
 
+    # shop番号を更新
+    product.shop = Product.BOOTH
+    
     # ブラウザを閉じる
     webscraper.close_browser(driver)
 
