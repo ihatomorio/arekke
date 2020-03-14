@@ -1,32 +1,19 @@
 import re
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import Select
 import chromedriver_binary
-from django.conf import settings
-from engine import webscraper
+import time
 #画像保存用
 import urllib.request
-from book_app.models import Product
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.common.by import By
+from django.conf import settings
+
 from book_app import views
-
-
-def GetProductTitleFromDriver(driver):
-    return driver.find_element_by_xpath('//*[@id="title"]/div/div[1]/div[1]/h1').text
-
-
-def GetProductCircleFromDriver(driver):
-    return driver.find_element_by_xpath('//*[@id="title"]/div/div[2]/div[1]/div/a').text
-
-
-def GetProductAuthorFromDriver(driver):
-    return driver.find_element_by_xpath('//*[@id="description"]/table/tbody/tr[3]/td/a').text
-
-
-def GetProductImageUrlFromDriver(driver):
-    return driver.find_element_by_xpath('//*[@id="main"]/div[1]/a/img').get_attribute("src")
-
+from book_app.models import Product
 
 def get_product_info(product):
     # ブラウザーを起動
@@ -35,6 +22,7 @@ def get_product_info(product):
     options.add_argument('--headless')
     options.add_argument('--no-sandbox') #rootに必要
     driver = webdriver.Chrome(options=options)
+    driver.set_page_load_timeout(60)
 
     # Webページにアクセス
     driver.get(product.url)
@@ -42,41 +30,57 @@ def get_product_info(product):
     # タイトルに'メロンブックス'が含まれていることを確認する。
     assert 'メロンブックス' in driver.title
 
-    # 商品名を取得
-    product.title = GetProductTitleFromDriver(driver)
-    print(product.title)
+    try:
+        if 'ご指定のページはございません。' in driver.find_element_by_css_selector('body > div.box-warning-01 > p').text:
+            print(driver.find_element_by_css_selector('body > div.box-warning-01 > p').text)
+    except NoSuchElementException:
+        pass
 
-    # サークル名称を取得
-    product.circle = GetProductCircleFromDriver(driver)
-    print(product.circle)
+    try:
+        # 商品名を取得
+        product.title = driver.find_element_by_xpath('//*[@id="description"]/table/tbody/tr[1]/td').text
+        print(product.title)
+    except NoSuchElementException:
+        pass
+    try:
+        # サークル名称を取得
+        product.circle = driver.find_element_by_css_selector('#title > div > div > div.clm_g > div > a').text
+        print(product.circle)
+    except NoSuchElementException:
+        pass
+    try:
+        # 作家名を取得
+        product.author = driver.find_element_by_xpath('//*[@id="description"]/table/tbody/tr[3]/td/a').text
+        print(product.author)
+    except NoSuchElementException:
+        pass
+    try:
+        # 画像URLを取得
+        url = driver.find_element_by_class_name('tag_sample1').get_attribute("href")
+        print(url)
 
-    # 作家名を取得
-    product.author = GetProductAuthorFromDriver(driver)
-    print(product.author)
+        # 画像のファイル名を取得
+        filename = re.findall(r'https://.*image=(.*\.jpg)', url)
+        print(filename[0])
 
-    # 画像URLを取得
-    url = GetProductImageUrlFromDriver(driver)
-    print(url)
+        # 保存用パスを生成 MEDIA_ROOT = '/root/repos/websq/book_project/media'
+        path = settings.MEDIA_ROOT + "/melonbooks/" + filename[0]
+        print(path)
 
-    # 画像のファイル名を取得
-    filename = re.findall(r'https://.*image=(.*\.jpg).*', url)
-    print(filename[0])
+        # 画像を保存用パスへダウンロード
+        urllib.request.urlretrieve(url, path)
 
-    # 保存用パスを生成 MEDIA_ROOT = '/root/repos/websq/book_project/media'
-    path = settings.MEDIA_ROOT + "/melonbooks/" + filename[0]
-    print(path)
+        # DBのパスを更新
+        product.image_path = "melonbooks/" + filename[0]
+        
+    except NoSuchElementException:
+        print('element error!')
 
-    # 画像を保存用パスへダウンロード
-    urllib.request.urlretrieve(url, path)
-
-    # DBのパスを更新
-    product.image_path = "melonbooks/" + filename[0]
-    
     # shop番号を更新
     product.shop = Product.MELONBOOKS
     
     # ブラウザを閉じる
-    webscraper.close_browser(driver)
+    driver.quit()
 
 
 def get_product_list(account, request):
@@ -130,15 +134,36 @@ def get_product_list(account, request):
     driver.save_screenshot('page_screenshot.png')
 
     # 表からURLとタイトル一覧の取得し保存
-    product_elements = driver.find_elements_by_class_name('product')
-    for product_element in product_elements:
-        inner_html = product_element.get_attribute("innerHTML")
-        # print(inner_html)
-        infos = re.findall(r'<p class="name"><a href="(/detail/detail.php\?product_id=\d+)" title="商品番号:\d+ .*">商品番号:\d+<br>(.*)</a></p>', inner_html)
-        print(infos[0][0]) #URL
-        print(infos[0][1]) #title
-        if views.CreateFromUrl('https://www.melonbooks.co.jp' + infos[0][0], request) == -1:
+    while True:
+        product_elements = driver.find_elements_by_class_name('product')
+        for product_element in product_elements:
+            inner_html = product_element.get_attribute("innerHTML")
+            # print(inner_html)
+            infos = re.findall(r'<p class="name"><a href="(/detail/detail.php\?product_id=\d+)" title="商品番号:\d+ .*">商品番号:\d+<br>(.*)</a></p>', inner_html)
+            print(infos[0][0]) #URL
+            print(infos[0][1]) #title
+            if views.CreateFromUrl('https://www.melonbooks.co.jp' + infos[0][0], request) == -1:
+                pass
+        try:
+            # driver.find_element_by_xpath('//*[@id="container"]/div/div[1]/div/div[6]/div/ul/li[3]/a/span').click
+            elements = driver.find_elements_by_class_name('next')
+            for element in elements:
+                if '次へ' in element.text:
+                    print(element.text)
+                    element.click
+            # driver.implicitly_wait(3)
+            time.sleep(15)
+            driver.save_screenshot('page_screenshot.png')
+            break
+            # WebDriverWait(driver, 15).until(expected_conditions.presence_of_element_located((By.CLASS_NAME, 'product')))
+        except NoSuchElementException:
+            print('no button')
+            break
+        except TimeoutException:
+            print('timed out')
             break
 
+    print('finished')
+
     # ブラウザを閉じる
-    webscraper.close_browser(driver)
+    driver.quit()

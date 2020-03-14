@@ -94,9 +94,6 @@ def get_product_list(account, request):
         password_element = driver.find_element_by_name("password")
         password_element.send_keys(account.password)
         
-        # スクリーンショットを撮る。
-        driver.save_screenshot('page_screenshot.png')
-
         # ログインボタンを押す
         driver.find_element_by_css_selector('#loginbutton_script_on > span').click()
 
