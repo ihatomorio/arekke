@@ -26,12 +26,36 @@ def get_product_list(account, request):
         shops.dlsite.get_product_list(account, request)
     elif account.shop == models.Account.FANZA_DOUJIN:
         shops.fanza_doujin.get_product_list(account, request)
+    elif account.shop == models.Account.MELONBOOKS:
+        shops.melonbooks.get_product_list(account, request)
     # elif account.shop == models.Account.FANZA_COMIC:
     #     shops.fanza_comic.get_product_list(account, request)
-    # elif account.shop == models.Account.MELONBOOKS:
-    #     shops.melonbooks.get_product_list(account, request)
 
 
 def close_browser(driver):
     # ブラウザーを終了
     driver.quit()
+
+
+def UpdateProductInfo(product):
+    # ブラウザーを起動
+    options = Options()
+    options.binary_location = '/opt/google/chrome-beta/google-chrome-beta'
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox') #rootに必要
+    driver = webdriver.Chrome(options=options)
+    
+    # Webページにアクセス
+    driver.get(product.url)
+
+    # 商品名をアップデート
+    product.title = shops.melonbooks.GetProductTitleFromDriver(driver)
+
+    # サークル名をアップデート
+    product.circle = shops.melonbooks.GetProductTitleFromDriver(driver)
+
+    # 著者を取得
+    product.author = shops.melonbooks.GetProductAuthorFromDriver(driver)
+
+    # 画像URLを取得
+    image_url = shops.melonbooks.GetProductImageUrlFromDriver(driver)

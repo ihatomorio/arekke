@@ -18,8 +18,8 @@ def product_list(request):
         product = Product.objects.get(pk=pk_id)
 
         # 並列処理で商品情報を取得する
-        futures.ThreadPoolExecutor(max_workers=4).submit(fn=UpdateWithUrl, obj=product)
-
+        futures.ThreadPoolExecutor(max_workers=4).submit(fn=UpdateWithUrl, product=product)
+        
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/product/list/')
     
