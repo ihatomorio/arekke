@@ -12,7 +12,7 @@ def product_list(request):
     products = Product.objects.filter(owner=request.user)
     if request.method == "POST":
         # POSTリクエストからpkを取り出す
-        pk_id = request.POST.get('pk',None)
+        pk_id = request.POST.get('pk', None)
 
         # 指定のpkからproductを取り出す
         product = Product.objects.get(pk=pk_id)
@@ -112,4 +112,4 @@ def CreateFromUrl(url, request):
     )
 
     # 並列処理で商品情報を取得する
-    futures.ThreadPoolExecutor(max_workers=4).submit(fn=UpdateWithUrl, obj=product)
+    futures.ThreadPoolExecutor(max_workers=4).submit(fn=UpdateWithUrl, product=product)

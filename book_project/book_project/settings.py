@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'accounts',
     'book_app',
+    'engine',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
