@@ -18,7 +18,7 @@ def product_list(request):
         product = Product.objects.get(pk=pk_id)
 
         # 並列処理で商品情報を取得する
-        futures.ThreadPoolExecutor(max_workers=4).submit(fn=GetFromObjsUrl, obj=product)
+        futures.ThreadPoolExecutor(max_workers=4).submit(fn=UpdateWithUrl, obj=product)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/product/list/')
@@ -83,12 +83,12 @@ def account_new(request):
     return render(request, 'book_app/account_new.html', {'form': form})
 
 
-def GetFromObjsUrl(obj):
+def UpdateWithUrl(product):
     # Webスクレイピングを実行
-    webscraper.get_product_info(obj)
+    webscraper.get_product_info(product)
 
-    # objを取得してきた情報で確定
-    obj.save()
+    # productを取得してきた情報で確定
+    product.save()
 
 
 def GetProductList(account, request):
@@ -112,4 +112,4 @@ def CreateFromUrl(url, request):
     )
 
     # 並列処理で商品情報を取得する
-    futures.ThreadPoolExecutor(max_workers=4).submit(fn=GetFromObjsUrl, obj=product)
+    futures.ThreadPoolExecutor(max_workers=4).submit(fn=UpdateWithUrl, obj=product)
