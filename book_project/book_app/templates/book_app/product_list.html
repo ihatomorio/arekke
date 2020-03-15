@@ -1,0 +1,89 @@
+{% extends 'book_app/base.html' %}
+{% load static %}
+
+<!-- title block -->
+{% block title %} - Product List{% endblock %}
+
+<!-- Custom styles for this page -->
+{% block pagecss %}
+<link href="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+<!-- Page level plugins -->
+{% block pageplugin %}
+<script src="{% static 'bootstrap/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+  // Call the dataTables jQuery plugin
+  $(document).ready(function () {
+    $('#dataTable').DataTable({
+      "order": [[5, "desc"]]
+    });
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <h2 class="h2 mb-2 text-gray-800">購入済み商品の一覧</h2>
+  <p class="mb-4">購入情報の一覧です。</p>
+
+  <!-- functions -->
+  <a class="btn btn-primary" href="/product/new/">追加</a>
+
+  <!-- DataTales Example -->
+
+  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    </tableclass>
+    <thead>
+      <tr>
+        <th width="120px">表紙</th>
+        <th width="20%">題名</th>
+        <th width="20%">著者</th>
+        <th width="20%">サークル名</th>
+        <th>購入日</th>
+        <th>追加日</th>
+        <th>商品情報</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for products in products %}
+      <tr>
+        <td>{% if products.image_path %}<img src="{{ MEDIA_URL }}{{ products.image_path }}"
+            height="100"></img>{% endif %}</td>
+        <td>
+          {% if not products.title %}
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          {% endif %}
+          {% if products.url %}
+          {% if products.shop %}<span class="badge badge-primary">{{products.get_shop_display}}</span><br>{% endif %}
+          <a href="{{products.url}}">{{products.title}}</a>
+          {% else %}
+          {{ products.title }}
+          {% endif %}
+        </td>
+        <td>{{products.author}}</td>
+        <td>{{products.circle}}</td>
+        <td>{{products.date}}</td>
+        <td>{{products.added_date | date:"Y/m/j H:i:s"}}</td>
+        <td>{% if products.url %}
+          <form method="POST">{% csrf_token %}
+            <input type="hidden" name="pk" value="{{products.pk}}">
+            <button type="submit" class="btn btn-primary">更新</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+</div>
+<!-- /.container-fluid -->
+{% endblock %}

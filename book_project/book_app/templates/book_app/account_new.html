@@ -1,0 +1,29 @@
+{% extends 'book_app/base.html' %}
+
+<!-- title block -->
+{% block title %} - Account New{% endblock %}
+
+<!-- Custom styles for this page -->
+{% block pagecss %}
+{% endblock %}
+
+<!-- Page level plugins -->
+{% block pageplugin %}
+{% endblock %}
+
+
+{% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <h2>連携アカウント追加</h2>
+    <form method="POST" class="post-form">{% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+
+</div>
+<!-- /.container-fluid -->
+{% endblock %}

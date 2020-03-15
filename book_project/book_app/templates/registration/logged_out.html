@@ -1,0 +1,36 @@
+{% extends 'book_app/base.html' %}
+{% load static %}
+
+<!-- title block -->
+{% block title %} - Logout{% endblock %}
+
+<!-- Custom styles for this page -->
+{% block pagecss %}
+<link href="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+<!-- Page level plugins -->
+{% block pageplugin %}
+<script src="{% static 'bootstrap/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+  // Call the dataTables jQuery plugin
+  $(document).ready(function () {
+    $('#dataTable').DataTable();
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <h2 class="h2 mb-2 text-gray-800">ログアウトしました</h2>
+
+  <!-- DataTales Example -->
+
+
+</div>
+<!-- /.container-fluid -->
+{% endblock %}

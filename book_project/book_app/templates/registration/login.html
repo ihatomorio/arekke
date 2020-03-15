@@ -1,0 +1,68 @@
+{% extends 'book_app/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+<!-- title block -->
+{% block title %} - Login{% endblock %}
+
+<!-- Custom styles for this page -->
+{% block pagecss %}
+<link href="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+<!-- Page level plugins -->
+{% block pageplugin %}
+<script src="{% static 'bootstrap/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'bootstrap/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+    // Call the dataTables jQuery plugin
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Begin Page Content -->
+<div class="text-center">
+
+    <!-- Page Heading -->
+    <h2 class="h2 mb-2 text-gray-800">ログイン</h2>
+
+    <!-- サインアップ -->
+    <p class="#">初めてですか？<a href="/accounts/signup/">サインアップ</a></p>
+
+    <!-- login form -->
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">ユーザー名またはパスワードが違います。</div>
+    {% endif %}
+
+    {% if next %}
+    {% if user.is_authenticated %}
+    <div class="alert alert-warning" role="alert">このアカウントはこのページに対するアクセス権を持ちません。別のアカウントでログインしてください。</div>
+    {% else %}
+    <div class="alert alert-info" role="alert">ログインしてください。</div>
+    {% endif %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <div class="form-group">
+                    {{ form.username.label_tag}}
+                    {{ form.username | add_class:"form-control" }}
+            </div>
+            <div class="form-group">
+                    {{ form.password.label_tag }}
+                    {{ form.password | add_class:"form-control" }}
+                </div>
+            </table>
+
+            <input type="submit" class="btn btn-primary" value="ログイン" />
+            <input type="hidden" name="next" value="{{ next }}" />
+        </div>
+    </form>
+
+</div>
+<!-- /.container-fluid -->
+{% endblock %}

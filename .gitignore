@@ -4,5 +4,9 @@ media/
 
 .vscode/
 
+book_project/media/*
 image.png
 page_screenshot.png
+
+/test.py
+/driver.py
