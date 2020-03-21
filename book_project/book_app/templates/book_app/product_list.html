@@ -61,8 +61,8 @@
           </div>
           {% endif %}
           {% if products.url %}
-          {% if products.shop %}<span class="badge badge-primary">{{products.get_shop_display}}</span><br>{% endif %}
           <a href="{{products.url}}" target="_blank" rel="noopener noreferrer">{{products.title}}</a>
+          {% if products.shop %}<br><span class="badge badge-primary">{{products.get_shop_display}}</span>{% endif %}
           {% else %}
           {{ products.title }}
           {% endif %}
