@@ -1,5 +1,6 @@
 # 前提パッケージのバージョン確認結果
 
+```shell
 mikan@sana:~/arekke$ python --version
 Python 3.6.9
 
@@ -19,10 +20,13 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 mikan@sana:~/arekke$ python -m django --version
 3.0.4
+```
 
 # プロジェクトの追加
 
+```shell
 mikan@sana:~/arekke$ django-admin startproject book_project
+```
 
 # ログインの追加
 
