@@ -25,3 +25,10 @@ mikan@sana:~/arekke$ python -m django --version
 mikan@sana:~/arekke$ django-admin startproject book_project
 
 # ログインの追加
+
+
+# サーバー起動方法
+抜けると終了してしまうので、forkerを使いましょう。
+```
+forker 'sh start_server.sh'
+```
