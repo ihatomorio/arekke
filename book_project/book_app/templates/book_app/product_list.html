@@ -55,7 +55,7 @@
         <td>{% if products.image_path %}<img src="{{ MEDIA_URL }}{{ products.image_path }}"
             height="100"></img>{% endif %}</td>
         <td>
-          {% if not products.title %}
+          {% if products.title == 'loading' %}
           <div class="spinner-border" role="status">
             <span class="sr-only">Loading...</span>
           </div>

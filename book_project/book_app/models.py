@@ -25,17 +25,17 @@ class Product(models.Model):
     )
     
     # 所有者
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     # 書名
-    title = models.CharField(max_length=256)
+    title = models.CharField(max_length=256, null=True)
     # 著者
-    author = models.CharField(max_length=256)
+    author = models.CharField(max_length=256, null=True)
     # サークル名
-    circle = models.CharField(max_length=256)
+    circle = models.CharField(max_length=256, null=True)
     # 購入店舗
-    shop = models.IntegerField(choices=SHOPS)
+    shop = models.IntegerField(choices=SHOPS, null=True)
     # URL
-    url = models.URLField(max_length=512)
+    url = models.URLField(max_length=512, null=True)
     # 購入日時
     date = models.DateTimeField(null=True, blank=True)
     # 追加日時
@@ -45,9 +45,11 @@ class Product(models.Model):
 
     # 自身の情報
     def __str__(self):
-        return self.title.__str__()
+        for shops in self.SHOPS:
+            if shops[0] == self.shop:
+                return self.owner.__str__() + ': ' + self.title.__str__()
 
-        
+
 # 店舗情報
 class Account(models.Model):
 
@@ -82,3 +84,9 @@ class Account(models.Model):
 
     # 最終取得日時
     date = models.DateTimeField(null=True, blank=True)
+
+    # 自身の情報
+    def __str__(self):
+        for shops in self.SHOPS:
+            if shops[0] == self.shop:
+                return self.owner.__str__() + ': ' + shops[1]

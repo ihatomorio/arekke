@@ -1,11 +1,15 @@
+from concurrent import futures
+
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+
 from book_app.models import Product, Account
 from . import forms
-from engine import webscraper
-from concurrent import futures
+
+from engine.webscraper import DoujinShop
+
 
 @login_required
 def product_list(request):
@@ -18,12 +22,15 @@ def product_list(request):
         product = Product.objects.get(pk=pk_id)
 
         # 並列処理で商品情報を取得する
-        futures.ThreadPoolExecutor(max_workers=4).submit(fn=UpdateWithUrl, product=product)
-        
+        # DoujinShop.QueueUpdateProductInfo(product, False)
+        DoujinShop.UpdateProductInfo(product, False)
+        # futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=True)
+
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/product/list/')
     
     return render(request, 'book_app/product_list.html', {'products': products})
+
 
 @login_required
 def product_new(request):
@@ -46,6 +53,7 @@ def product_new(request):
         form = forms.ProductForm()
     return render(request, 'book_app/product_new.html', {'form': form})
 
+
 @login_required
 def account_list(request):
     accounts = Account.objects.filter(owner=request.user)
@@ -57,12 +65,18 @@ def account_list(request):
         account = Account.objects.get(pk=pk_id)
 
         # Webスクレイピングを実行
-        futures.ThreadPoolExecutor(max_workers=4).submit(fn=GetProductList, account=account, request=request)
+        try:
+            # DoujinShop.QueueGetProductList(account, request.user)
+            DoujinShop.GetProductList(account, request.user)
+            # futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.GetProductList, account=account, request_by=request.user)
+        except:
+            pass
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/account/list/')
     
     return render(request, 'book_app/account_list.html', {'accounts': accounts})
+
 
 @login_required
 def account_new(request):
@@ -82,34 +96,3 @@ def account_new(request):
         form = forms.AccountForm()
     return render(request, 'book_app/account_new.html', {'form': form})
 
-
-def UpdateWithUrl(product):
-    # Webスクレイピングを実行
-    webscraper.get_product_info(product)
-
-    # productを取得してきた情報で確定
-    product.save()
-
-
-def GetProductList(account, request):
-    # webスクレイピング
-    webscraper.get_product_list(account, request)
-
-    # objを取得してきた情報で確定
-    account.date = timezone.now()
-    account.save()
-
-
-def CreateFromUrl(url, request):
-    # URL被りがあったら-1で終了
-    if Product.objects.filter(url=url):
-        return -1
-
-    product = Product.objects.create(
-        owner = request.user,
-        shop = 0,
-        url = url
-    )
-
-    # 並列処理で商品情報を取得する
-    futures.ThreadPoolExecutor(max_workers=4).submit(fn=UpdateWithUrl, product=product)
