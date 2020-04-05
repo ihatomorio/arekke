@@ -1,6 +1,7 @@
 import re
 
 from book_app.models import Product
+from selenium.common.exceptions import NoSuchElementException
 
 from ..webscraper import DoujinShop
 
@@ -9,6 +10,13 @@ class Booth(DoujinShop):
     def _CheckOpened(self):
         # タイトルに'BOOTH'が含まれていることを確認する。
         assert 'BOOTH' in self.driver.title
+
+        # 年齢確認を突破
+        if '年齢確認' in self.driver.find_element_by_tag_name("h1").text:
+            try:
+                self.driver.find_element_by_css_selector('a.adult-check-nav').click()
+            except NoSuchElementException:
+                pass
 
     def _GetShopNumber(self):
         return Product.BOOTH
@@ -20,7 +28,7 @@ class Booth(DoujinShop):
         return self.driver.find_element_by_css_selector("div.u-text-ellipsis").text
 
     def _GetAuthor(self):
-        pass
+        return None
 
     def _GetImageUrl(self):
         return self.driver.find_element_by_css_selector('body > div.page-wrap > main > div.market-item-detail.u-bg-white > article > div > div.u-bg-white.u-pt-600.u-px-700 > div.container > div > div.u-order-0.l-col-3of5.u-pr-500 > div.primary-image-area.slick-initialized.slick-slider > div > div > div.slick-slide.slick-current.slick-active > div > div > div > img').get_attribute("src")
@@ -30,16 +38,16 @@ class Booth(DoujinShop):
         return "booth/" + filename[0]
 
     def _GetLoginUrl(self):
-        pass
+        raise NotImplementedError
 
     def _GetProductListUrl(self):
-        pass
+        raise NotImplementedError
 
     def _MakeLogin(self, user_name, password):
-        pass
+        raise NotImplementedError
 
     def _CheckLogin(self):
-        pass
+        raise NotImplementedError
 
     def _GetProductUrlList(self):
-        pass
+        raise NotImplementedError
