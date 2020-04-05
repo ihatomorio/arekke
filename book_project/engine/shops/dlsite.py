@@ -70,9 +70,6 @@ class DLSite(DoujinShop):
         # 購入月:すべて を選択
         Select(self.driver.find_element_by_id('_start')).select_by_value('all')
 
-        # 並び順: 古い順を選択
-        Select(self.driver.find_element_by_name('sort')).select_by_value('2')
-
         # 表示 をクリック
         self.driver.find_element_by_id('_display').click()
 
