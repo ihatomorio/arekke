@@ -28,8 +28,11 @@
       if (row_number == 2 || row_number == 3) {
         // get data where you clicked
         var data = table.cell(this).data();
-        // input to serach query form and redraw
-        table.search(data).draw();
+        // just neither None nor blank(undefined)
+        if( data != 'None' && data != undefined ){
+          // input to serach query form and redraw
+          table.search(data).draw();
+        }
       }
     });
   });
