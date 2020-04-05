@@ -44,6 +44,7 @@ def product_new(request):
                 url = cd['url'],
                 title = cd['title'],
                 author = cd['author'],
+                circle = cd['circle'],
                 added_date = timezone.now(),
             )
 
