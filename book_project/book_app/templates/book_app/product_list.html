@@ -16,8 +16,21 @@
 <script>
   // Call the dataTables jQuery plugin
   $(document).ready(function () {
-    $('#dataTable').DataTable({
+    // define default order
+    var table = $('#dataTable').DataTable({
       "order": [[5, "desc"]]
+    });
+
+    // do on click
+    $('#dataTable').on('click', 'td', function () {
+      var row_number = table.column(this).index();
+      // just author or circle column
+      if (row_number == 2 || row_number == 3) {
+        // get data where you clicked
+        var data = table.cell(this).data();
+        // input to serach query form and redraw
+        table.search(data).draw();
+      }
     });
   });
 </script>
@@ -54,8 +67,8 @@
       <tr>
         <td>
           {% if products.image_path %}
-            {% if products.url %}<a href="{{products.url}}" target="_blank" rel="noopener noreferrer">{% endif %}
-              <img src="{{ MEDIA_URL }}{{ products.image_path }}" height="100"></img>
+          {% if products.url %}<a href="{{products.url}}" target="_blank" rel="noopener noreferrer">{% endif %}
+            <img src="{{ MEDIA_URL }}{{ products.image_path }}" height="100"></img>
             {% if products.url %}</a>{% endif %}
           {% endif %}
         </td>
