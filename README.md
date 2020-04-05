@@ -23,13 +23,15 @@ Type "help", "copyright", "credits" or "license" for more information.
 3.0.4
 ```
 
-## プロジェクトの追加
+## Deploy
 
 git clone this
 and install bootstrap theme to `book_project/static/bootstrap`
 
+詳細は後で書きます
+
 ## サーバー起動方法
 
-```
+```shell
 sh start_server.sh
 ```
