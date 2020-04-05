@@ -12,11 +12,11 @@ class Booth(DoujinShop):
         assert 'BOOTH' in self.driver.title
 
         # 年齢確認を突破
-        if '年齢確認' in self.driver.find_element_by_tag_name("h1").text:
-            try:
+        try:
+            if '年齢確認' in self.driver.find_element_by_tag_name("h1").text:
                 self.driver.find_element_by_css_selector('a.adult-check-nav').click()
-            except NoSuchElementException:
-                pass
+        except NoSuchElementException:
+            pass
 
     def _GetShopNumber(self):
         return Product.BOOTH
