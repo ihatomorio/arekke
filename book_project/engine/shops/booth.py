@@ -14,10 +14,10 @@ class Booth(DoujinShop):
         return Product.BOOTH
 
     def _GetTitle(self):
-        return self.driver.find_element_by_css_selector(".u-text-wrap.u-tpg-title1.u-mt-0.u-mb-400").text
+        return self.driver.find_element_by_css_selector("h2.u-tpg-title1").text
 
     def _GetCircle(self):
-        return self.driver.find_element_by_class_name("u-text-ellipsis").text
+        return self.driver.find_element_by_css_selector("div.u-text-ellipsis").text
 
     def _GetAuthor(self):
         pass
