@@ -17,7 +17,11 @@ class FanzaDoujin(DoujinShop):
         return Product.FANZA_DOUJIN
 
     def _GetTitle(self):
-        return self.driver.find_element_by_css_selector('#doujinLIst > div.l-areaMainColumn > div.l-areaProductTitle > div.m-productHeader > div > div > div.m-productInfo > div > div > div > div > h1').text
+        title = self.driver.find_element_by_css_selector('#doujinLIst > div.l-areaMainColumn > div.l-areaProductTitle > div.m-productHeader > div > div > div.m-productInfo > div > div > div > div > h1').text
+        if '%OFF】 ' in title or '％OFF】 ' in title :
+            matched = re.findall(r'【[0-9]0[%％]OFF】(.*)', title)
+            title = matched[0]
+        return title
 
     def _GetCircle(self):
         return self.driver.find_element_by_xpath('//*[@id="doujinLIst"]/div[2]/div[1]/div[2]/div/div[1]/div/div/div/a').text
@@ -58,10 +62,13 @@ class FanzaDoujin(DoujinShop):
             print('Fail: FanzaDoujin')
             raise 'Fail: _CheckLogin'
 
-    def _GetProductElements(self):
-        return self.driver.find_elements_by_class_name('localListProduct1pSCw')
+    def _GetProductUrlList(self):
+        url_list = []
 
-    def _GetUrlFromProductElement(self, element):
-        inner_html = element.get_attribute("innerHTML")
-        infos = re.findall(r'<a href=\"/dc/-/mylibrary/detail/=/product_id=(.*/)\".*<p>(.*)</p></div><p', inner_html)
-        return 'https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=' + infos[0][0]
+        # fanza同人は逆順なので一旦逆にする
+        for element in self.driver.find_elements_by_class_name('localListProduct1pSCw'):
+            inner_html = element.get_attribute("innerHTML")
+            infos = re.findall(r'<a href=\"/dc/-/mylibrary/detail/=/product_id=(.*/)\".*<p>(.*)</p></div><p', inner_html)
+            url_list.append('https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=' + infos[0][0])
+
+        return url_list

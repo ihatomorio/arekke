@@ -19,18 +19,6 @@ class DoujinShop(metaclass=ABCMeta):
         self.driver = None
 
     @staticmethod
-    def QueueUpdateProductInfo(product, set_shop_num):
-        futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=set_shop_num)
-
-    @staticmethod
-    def QueueGetProductList(account, request_by):
-        futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.GetProductList, account=account, request_by=request_by)
-
-    @staticmethod
-    def QueueCreateFromUrl(url, request_by):
-        futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.CreateFromUrl, url=url, request_by=request_by)
-
-    @staticmethod
     def UpdateProductInfo(product, set_shop_num):
         from .shops.booth import Booth
         from .shops.dlsite import DLSite
@@ -105,9 +93,9 @@ class DoujinShop(metaclass=ABCMeta):
 
         # 並列処理で商品情報を取得する
         DoujinShop.UpdateProductInfo(product, True)
-        # futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=True)
 
     def __UpdateProductInfoFromUrl(self, product, url):
+        print('start: __UpdateProductInfoFromUrl')
         # ブラウザを開く
         self.__OpenBrowser(url)
         print('URL: ', url)
@@ -154,7 +142,7 @@ class DoujinShop(metaclass=ABCMeta):
         self.__OpenBrowser(self._GetLoginUrl())
         print('__OpenBrowser')
 
-        # ログイン情報を入力
+        # ログインする
         self._MakeLogin(account.user, account.password)
         print('_MakeLogin')
 
@@ -162,15 +150,15 @@ class DoujinShop(metaclass=ABCMeta):
         self._CheckLogin()
         print('_CheckLogin')
 
-        # 一覧ページからエレメントを取得
-        product_elements = self._GetProductElements()
-        print('_GetProductElements')
+        # 商品URL一覧を取得
+        # url_list must be newer to old
+        url_list = self._GetProductUrlList()
 
-        # エレメントごとに商品作成
-        for product_element in product_elements:
-            # futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.CreateFromUrl, url=self._GetUrlFromProductElement(product_element), request_by=request_by)
-            DoujinShop.CreateFromUrl(self._GetUrlFromProductElement(product_element), request_by)
-            print('CreateFromUrl')
+        # 商品URLごとに商品作成
+        with futures.ThreadPoolExecutor(max_workers=4) as executer:
+            for url in reversed(url_list):
+                executer.submit(fn=DoujinShop.CreateFromUrl, url=url, request_by=request_by)
+                # DoujinShop.CreateFromUrl(self._GetUrlFromProductElement(product_element), request_by)
 
         # ブラウザを閉じる
         self.__CloseBrowser()
@@ -252,9 +240,5 @@ class DoujinShop(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def _GetProductElements(self):
-        pass
-
-    @abstractmethod
-    def _GetUrlFromProductElement(self, element):
+    def _GetProductUrlList(self):
         pass

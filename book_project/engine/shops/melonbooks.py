@@ -75,21 +75,31 @@ class Melonbooks(DoujinShop):
             print(page_title_element.text)
         except NoSuchElementException:
             print('Fail: Melonbooks')
-            raise 'Fail: _CheckLogin'
+            raise 'LoginFailException'
 
-    def _GetProductElements(self):
+    def _GetProductUrlList(self):
         # 注文時期:すべて を選択
         Select(self.driver.find_element_by_name('search_select')).select_by_value('999')
 
         # GO をクリック
         self.driver.find_element_by_css_selector('#form1 > div > div > div > div.clm.clm_r > span.input_btn.br_5 > a').click()
     
-        
+        url_list = []
+            
         while True:
-            # エレメント一覧を取得
-            product_elements = self.driver.find_elements_by_class_name('product')
+            # 商品を含む要素を取得
+            product_elements = self.driver.find_elements_by_css_selector('td.product')
 
-            # 次へ ボタンを押す処理
+            # 要素からURLを取り出し
+            for element in product_elements:
+                inner_html = element.get_attribute("innerHTML")
+                infos = re.findall(r'<p class="name"><a href="(/detail/detail.php\?product_id=\d+)" title="商品番号:\d+ .*">商品番号:\d+<br>(.*)</a></p>', inner_html)
+                url = 'https://www.melonbooks.co.jp' + infos[0][0]
+                
+                # URLリストに追加
+                url_list.append(url)
+
+            # 次へ ボタンを押す
             try:
                 # 次へと書いてあるボタンを探す
                 elements = self.driver.find_elements_by_class_name('next')
@@ -100,27 +110,20 @@ class Melonbooks(DoujinShop):
                         element.click()
                         # クリック後に待機
                         time.sleep(5)
-                        # driver.implicitly_wait(3)
-                        # WebDriverWait(driver, 15).until(expected_conditions.presence_of_element_located((By.CLASS_NAME, 'product')))
-                        break
-                else:
-                    # 次のページは無い
+                        # end for
+                        break                    
+                else: # 次へがみつからなかった
                     print('no more next button')
                     # whileを抜ける
                     break
+
             except TimeoutException:
                 # ロードがタイムアウトした
+                
                 # スクリーンショットを撮る。
                 self.driver.save_screenshot('error_page_screenshot.png')
                 print('Fail: Melonbooks')
                 raise 'Fail: _GetProductElements: TimeoutException'
                 # break
 
-            
-        return product_elements
-
-    def _GetUrlFromProductElement(self, element):
-        inner_html = element.get_attribute("innerHTML")
-        infos = re.findall(r'<p class="name"><a href="(/detail/detail.php\?product_id=\d+)" title="商品番号:\d+ .*">商品番号:\d+<br>(.*)</a></p>', inner_html)
-        return 'https://www.melonbooks.co.jp' + infos[0][0]
-
+        return url_list

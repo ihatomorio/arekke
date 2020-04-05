@@ -22,9 +22,8 @@ def product_list(request):
         product = Product.objects.get(pk=pk_id)
 
         # 並列処理で商品情報を取得する
-        # DoujinShop.QueueUpdateProductInfo(product, False)
-        DoujinShop.UpdateProductInfo(product, False)
-        # futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=True)
+        # DoujinShop.UpdateProductInfo(product, False)
+        futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=True)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/product/list/')
@@ -65,12 +64,8 @@ def account_list(request):
         account = Account.objects.get(pk=pk_id)
 
         # Webスクレイピングを実行
-        try:
-            # DoujinShop.QueueGetProductList(account, request.user)
-            DoujinShop.GetProductList(account, request.user)
-            # futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.GetProductList, account=account, request_by=request.user)
-        except:
-            pass
+        # DoujinShop.GetProductList(account, request.user)
+        futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.GetProductList, account=account, request_by=request.user)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/account/list/')

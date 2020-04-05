@@ -48,7 +48,7 @@ class DLSite(DoujinShop):
         self.driver.get(self._GetProductListUrl())
         assert '購入履歴' in self.driver.find_element_by_css_selector("h1").text
 
-    def _GetProductElements(self):
+    def _GetProductUrlList(self):
         # 一覧ページを開く
         # self.driver.get(self._GetProductListUrl())
         
@@ -76,10 +76,11 @@ class DLSite(DoujinShop):
         # 表示 をクリック
         self.driver.find_element_by_id('_display').click()
 
-        return self.driver.find_elements_by_class_name('work_name')
+        url_list = []
 
-    def _GetUrlFromProductElement(self, element):
-        inner_html = element.get_attribute("innerHTML")
-        infos = re.findall(r' +<a href="(http.*\.html)">(.*)</a>', inner_html)
-        return infos[0][0]
+        for element in self.driver.find_elements_by_class_name('work_name'):
+            inner_html = element.get_attribute("innerHTML")
+            infos = re.findall(r' +<a href="(http.*\.html)">(.*)</a>', inner_html)
+            url_list.append(infos[0][0])
 
+        return url_list

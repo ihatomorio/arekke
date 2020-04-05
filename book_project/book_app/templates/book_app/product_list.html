@@ -52,8 +52,13 @@
     <tbody>
       {% for products in products %}
       <tr>
-        <td>{% if products.image_path %}<img src="{{ MEDIA_URL }}{{ products.image_path }}"
-            height="100"></img>{% endif %}</td>
+        <td>
+          {% if products.image_path %}
+            {% if products.url %}<a href="{{products.url}}" target="_blank" rel="noopener noreferrer">{% endif %}
+              <img src="{{ MEDIA_URL }}{{ products.image_path }}" height="100"></img>
+            {% if products.url %}</a>{% endif %}
+          {% endif %}
+        </td>
         <td>
           {% if products.title == 'loading' %}
           <div class="spinner-border" role="status">
