@@ -27,7 +27,7 @@
 
   <!-- Page Heading -->
   <h2 class="h2 mb-2 text-gray-800">アカウントの一覧</h2>
-  <p class="mb-4">現在自動取得はDLSite, FANZA同人, メロンブックスのみです。取得にはとても時間がかかります。</p>
+  <p class="mb-4">現在自動取得はDLSite, FANZA同人, FANZA電子書籍(単行本のみ), メロンブックスのみです。取得にはとても時間がかかります。</p>
 
   <!-- functions -->
   <a class="btn btn-primary" href="/account/new/">追加</a>
@@ -54,7 +54,7 @@
             <td>{{accounts.get_shop_display}}</td>
             <td>{{accounts.date}}</td>
             <td>
-              {% if accounts.shop == 20 or accounts.shop == 31 or accounts.shop == 40 %}
+              {% if accounts.shop == 20 or accounts.shop == 30 or accounts.shop == 31 or accounts.shop == 40 %}
               <form method="POST">{% csrf_token %}
                 <input type="hidden" name="pk" value="{{accounts.pk}}">
                 <button type="submit" class="btn btn-primary">取得</button>
