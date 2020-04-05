@@ -29,8 +29,17 @@ class Booth(DoujinShop):
         filename = re.findall(r'https://.*/(.*_base_resized\.jpg)', image_url)
         return "booth/" + filename[0]
 
+    def _GetLoginUrl(self):
+        pass
+
+    def _GetProductListUrl(self):
+        pass
+
     def _MakeLogin(self, user_name, password):
         pass
 
     def _CheckLogin(self):
+        pass
+
+    def _GetProductUrlList(self):
         pass
