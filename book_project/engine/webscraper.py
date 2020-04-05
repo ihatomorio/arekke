@@ -56,13 +56,15 @@ class DoujinShop(metaclass=ABCMeta):
     def GetProductList(account, request_by):
         # from .shops.booth import Booth
         from .shops.dlsite import DLSite
-        # from .shops.fanza_comic import FanzaComic
+        from .shops.fanza_comic import FanzaComic
         from .shops.fanza_doujin import FanzaDoujin
         from .shops.melonbooks import Melonbooks
 
         # shop属性でインスタンスを切り替え
         if account.shop == Account.DLSITE:
             doujinshop = DLSite()
+        elif account.shop == Account.FANZA_COMIC:
+            doujinshop = FanzaComic()
         elif account.shop == Account.FANZA_DOUJIN:
             doujinshop = FanzaDoujin()
         elif account.shop == Account.MELONBOOKS:

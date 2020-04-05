@@ -37,7 +37,7 @@ class FanzaDoujin(DoujinShop):
         return "fanza_doujin/" + filename[0]
 
     def _GetLoginUrl(self):
-        return 'https://login.dlsite.com/login'
+        return 'https://book.dmm.co.jp/library/?age_limit=all&expired=0'
     
     def _GetProductListUrl(self):
         return 'https://www.dmm.co.jp/dc/-/mylibrary/'
@@ -65,7 +65,6 @@ class FanzaDoujin(DoujinShop):
     def _GetProductUrlList(self):
         url_list = []
 
-        # fanza同人は逆順なので一旦逆にする
         for element in self.driver.find_elements_by_class_name('localListProduct1pSCw'):
             inner_html = element.get_attribute("innerHTML")
             infos = re.findall(r'<a href=\"/dc/-/mylibrary/detail/=/product_id=(.*/)\".*<p>(.*)</p></div><p', inner_html)
