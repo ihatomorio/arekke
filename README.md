@@ -2,7 +2,39 @@
 
 あれ？この本買ったっけ？な書籍管理アプリです。
 
-## 動作確認をした前提パッケージのバージョン確認結果
+## How to install
+
+1. git clone this or Download ZIP and unzip
+
+2. Install packages
+    - python3
+    - google-chrome
+    - ChromeDriver
+    - Django
+
+3. Install SB Admin 2
+
+```shell for install SB Admin 2
+arekke$ mkdir -p static/bootstrap
+arekke$ cd
+~$ wget https://github.com/BlackrockDigital/startbootstrap-sb-admin-2/archive/gh-pages.zip
+~$ unzip gh-pages.zip
+~$ cp -r startbootstrap-sb-admin-2-gh-pages/* /path/to/arekke/book_project/static/bootstrap
+```
+
+## Start Server
+
+```shell
+sh start_server.sh
+```
+
+and you can change port in `start_server.sh` file
+
+## Open Web Page
+
+You can get access for `localhost:8080`
+
+## Developing Environment Versions
 
 ```shell
 $ python --version
@@ -21,24 +53,4 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import django
 >>> print(django.get_version())
 3.0.4
-```
-
-## Deploy
-
-git clone this
-
-and install SB Admin 2
-
-```shell for install SB Admin 2
-arekke$ mkdir -p static/bootstrap
-arekke$ cd
-~$ wget https://github.com/BlackrockDigital/startbootstrap-sb-admin-2/archive/gh-pages.zip
-~$ unzip gh-pages.zip
-~$ cp -r startbootstrap-sb-admin-2-gh-pages/* /path/to/arekke/book_project/static/bootstrap
-```
-
-## サーバー起動方法
-
-```shell
-sh start_server.sh
 ```
