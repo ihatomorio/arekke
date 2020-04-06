@@ -26,9 +26,16 @@ Type "help", "copyright", "credits" or "license" for more information.
 ## Deploy
 
 git clone this
-and install bootstrap theme to `book_project/static/bootstrap`
 
-詳細は後で書きます
+and install SB Admin 2
+
+```shell for install SB Admin 2
+arekke$ mkdir -p static/bootstrap
+arekke$ cd
+~$ wget https://github.com/BlackrockDigital/startbootstrap-sb-admin-2/archive/gh-pages.zip
+~$ unzip gh-pages.zip
+~$ cp -r startbootstrap-sb-admin-2-gh-pages/* /path/to/arekke/book_project/static/bootstrap
+```
 
 ## サーバー起動方法
 
