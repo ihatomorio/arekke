@@ -12,3 +12,4 @@ page_screenshot.png
 /driver.py
 
 /book_project/static/bootstrap
+/book_project/book_app/migrations
