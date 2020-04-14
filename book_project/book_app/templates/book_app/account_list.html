@@ -33,7 +33,7 @@
   <a class="btn btn-primary" href="/account/new/">追加</a>
 
   <!-- DataTales Example -->
-  <div class="card shadow mb-4">
+  <div class="card shadow my-3">
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary">アカウント一覧</h6>
     </div>
@@ -54,14 +54,14 @@
             <td>{{accounts.get_shop_display}}</td>
             <td>{{accounts.date}}</td>
             <td>
-              {% if accounts.shop == 20 or accounts.shop == 30 or accounts.shop == 31 or accounts.shop == 40 %}
               <form method="POST">{% csrf_token %}
                 <input type="hidden" name="pk" value="{{accounts.pk}}">
+                {% if accounts.shop == 20 or accounts.shop == 30 or accounts.shop == 31 or accounts.shop == 40 %}
                 <button type="submit" class="btn btn-primary">取得</button>
+                {% else %}
+                <button type="button" class="btn btn-primary" disabled>取得</button>
+                {% endif %}
               </form>
-              {% else %}
-              <button type="button" class="btn btn-primary" disabled>取得</button>
-              {% endif %}
             </td>
           </tr>
           {% endfor %}
