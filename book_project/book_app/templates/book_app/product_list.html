@@ -90,8 +90,8 @@
         </td>
         <td>{{products.author}}</td>
         <td>{{products.circle}}</td>
-        <td>{{products.date}}</td>
-        <td>{{products.added_date | date:"Y/m/j H:i:s"}}</td>
+        <td>{{products.bought_date}}</td>
+        <td>{{products.added_date | date:"Y/m/d H:i:s"}}</td>
         <td>{% if products.url %}
           <form method="POST">{% csrf_token %}
             <input type="hidden" name="pk" value="{{products.pk}}">

@@ -34,7 +34,7 @@ class ProductForm(forms.Form):
         required=False,
     )
     
-    date = forms.DateField(
+    bought_date = forms.DateField(
         label='購入日',
         required=False,
     )
@@ -46,9 +46,6 @@ class ProductForm(forms.Form):
 
     class Meta:
         model = Product
-
-    # class Meta:
-    #     model = Product
     #     fields = ('title', 'author', 'circle' 'shop', 'url', 'date', 'image_path')
 
 
