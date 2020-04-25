@@ -11,6 +11,8 @@
     - google-chrome
     - ChromeDriver
     - Django
+    - django-widget-tweaks
+    - pillow
 
 3. Install SB Admin 2
 
