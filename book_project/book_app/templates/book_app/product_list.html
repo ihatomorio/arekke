@@ -41,14 +41,22 @@
 
 {% block content %}
 <!-- Begin Page Content -->
-<div class="container-fluid">
+<div class="container-fluid mt-3 mb-3">
 
   <!-- Page Heading -->
-  <h2 class="h2 mb-2 text-gray-800">購入済み商品の一覧</h2>
-  <p class="mb-4">購入情報の一覧です。</p>
+  <div class="row">
+    <div class="mr-auto">
+      <h2 class="h2 mb-2 text-gray-800">購入済み商品の一覧</h2>
+    </div>
+  </div>
 
-  <!-- functions -->
-  <a class="btn btn-primary" href="/product/new/">追加</a>
+  <div class="row mt-2 mb-2">
+    <!-- functions -->
+    <div class="col-auto">
+      <a class="btn btn-primary" href="{% url 'product_new' %}">追加</a>
+    </div>
+  </div>
+
 
   <!-- DataTales Example -->
 
@@ -90,8 +98,8 @@
         </td>
         <td>{{products.author}}</td>
         <td>{{products.circle}}</td>
-        <td>{{products.date}}</td>
-        <td>{{products.added_date | date:"Y/m/j H:i:s"}}</td>
+        <td>{{products.bought_date}}</td>
+        <td><a href="{% url 'product_edit' products.pk %}">{{products.added_date | date:"Y/m/d H:i:s"}}</a></td>
         <td>{% if products.url %}
           <form method="POST">{% csrf_token %}
             <input type="hidden" name="pk" value="{{products.pk}}">

@@ -37,7 +37,7 @@ class Product(models.Model):
     # URL
     url = models.URLField(max_length=512, null=True)
     # 購入日時
-    date = models.DateTimeField(null=True, blank=True)
+    bought_date = models.DateTimeField(null=True, blank=True)
     # 追加日時
     added_date = models.DateTimeField(default=timezone.now)
     # 画像のパス
