@@ -40,6 +40,7 @@ def product_new(request):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
+
             Product.objects.create(
                 owner=request.user,
                 shop = cd['shop'],
@@ -47,6 +48,7 @@ def product_new(request):
                 title = cd['title'],
                 author = cd['author'],
                 circle = cd['circle'],
+                image_path = cd['image_path'],
                 added_date = timezone.now(),
             )
 
@@ -64,11 +66,13 @@ def product_edit(request, pk):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
+
             procuct_object.shop = cd['shop']
             procuct_object.url = cd['url']
             procuct_object.title = cd['title']
             procuct_object.author = cd['author']
             procuct_object.circle = cd['circle']
+            procuct_object.image_path = cd['image_path']
 
             procuct_object.save()
             return redirect('/')
@@ -81,6 +85,7 @@ def product_edit(request, pk):
             'title': procuct_object.title,
             'author': procuct_object.author,
             'circle': procuct_object.circle,
+            'image_path': procuct_object.image_path,
             })
     
     return render(request, 'book_app/product_new.html', {'form': form})
