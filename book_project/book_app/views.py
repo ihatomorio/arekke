@@ -1,12 +1,12 @@
 from concurrent import futures
 
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import TemplateView
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
-from book_app.models import Product, Account
-from . import forms
+from .models import Product, Account
+from .forms import ProductForm, AccountForm
 
 from engine.webscraper import DoujinShop
 
@@ -14,31 +14,33 @@ from engine.webscraper import DoujinShop
 @login_required
 def product_list(request):
     products = Product.objects.filter(owner=request.user)
+
+    # POSTの場合更新処理
     if request.method == "POST":
         # POSTリクエストからpkを取り出す
         pk_id = request.POST.get('pk', None)
 
         # 指定のpkからproductを取り出す
-        product = Product.objects.get(pk=pk_id)
+        product = get_object_or_404(Product, pk=pk_id)
 
         # 並列処理で商品情報を取得する
         # DoujinShop.UpdateProductInfo(product, False)
         futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=True)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
-        return redirect('/product/list/')
+        return redirect('/')
     
+    # render() shortcut eliminates HttpResponce and loader
     return render(request, 'book_app/product_list.html', {'products': products})
 
 
 @login_required
 def product_new(request):
     if request.method == "POST":
-        form = forms.ProductForm(request.POST, request.FILES)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
-            # post = form.save(commit=False)
             cd = form.cleaned_data
-            post = Product.objects.create(
+            Product.objects.create(
                 owner=request.user,
                 shop = cd['shop'],
                 url = cd['url'],
@@ -48,9 +50,39 @@ def product_new(request):
                 added_date = timezone.now(),
             )
 
-            return redirect('/product/list/', pk=post.pk)
+            return redirect('/')
     else:
-        form = forms.ProductForm()
+        form = ProductForm()
+    return render(request, 'book_app/product_new.html', {'form': form})
+
+
+@login_required
+def product_edit(request, pk):
+    procuct_object = get_object_or_404(Product, pk=pk)
+
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            cd = form.cleaned_data
+            procuct_object.shop = cd['shop']
+            procuct_object.url = cd['url']
+            procuct_object.title = cd['title']
+            procuct_object.author = cd['author']
+            procuct_object.circle = cd['circle']
+
+            procuct_object.save()
+            return redirect('/')
+    else:
+        procuct_object = get_object_or_404(Product, pk=pk)
+
+        form = ProductForm({
+            'shop': procuct_object.shop,
+            'url': procuct_object.url,
+            'title': procuct_object.title,
+            'author': procuct_object.author,
+            'circle': procuct_object.circle,
+            })
+    
     return render(request, 'book_app/product_new.html', {'form': form})
 
 
@@ -77,7 +109,7 @@ def account_list(request):
 @login_required
 def account_new(request):
     if request.method == "POST":
-        form = forms.AccountForm(request.POST)
+        form = AccountForm(request.POST)
         if form.is_valid():
             # アカウントを作って保存
             Account.objects.create(
@@ -89,6 +121,6 @@ def account_new(request):
 
             return redirect('/account/list/')
     else:
-        form = forms.AccountForm()
+        form = AccountForm()
     return render(request, 'book_app/account_new.html', {'form': form})
 
