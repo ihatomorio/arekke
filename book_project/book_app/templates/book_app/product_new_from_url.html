@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 
 <!-- title block -->
-{% block title %} - Product New{% endblock %}
+{% block title %} - Product New from URL{% endblock %}
 
 <!-- Custom styles for this page -->
 {% block pagecss %}
@@ -17,7 +17,9 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
-    <h2>本を追加</h2>
+    <h2>本をURLから追加</h2>
+    <p class="mb-4">追加してもリスト画面に自動遷移しません。
+    </p>
     <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
         <div class="form-group col">
             {{ form.url.label_tag }}
