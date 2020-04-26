@@ -11,6 +11,10 @@ from .forms import ProductForm, AccountForm
 from engine.webscraper import DoujinShop
 
 
+# global variable
+_executer = futures.ThreadPoolExecutor(max_workers=4)
+
+
 @login_required
 def product_list(request):
     products = Product.objects.filter(owner=request.user)
@@ -25,7 +29,7 @@ def product_list(request):
 
         # 並列処理で商品情報を取得する
         # DoujinShop.UpdateProductInfo(product, False)
-        futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=True)
+        _executer.submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=False)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/')
@@ -56,6 +60,29 @@ def product_new(request):
     else:
         form = ProductForm()
     return render(request, 'book_app/product_new.html', {'form': form})
+
+
+@login_required
+def product_new_from_url(request):
+    if request.method == "POST":
+        form = ProductForm(request.POST)
+        # if form.is_valid(): #skipo check
+        print(form)
+        cd = form.cleaned_data
+
+        added_product = Product.objects.create(
+            owner=request.user,
+            url = cd['url'],
+            title = 'loading',
+            added_date = timezone.now(),
+        )
+
+        _executer.submit(fn=DoujinShop.UpdateProductInfo, product=added_product, set_shop_num=True)
+
+        return redirect('/product/new-from-url/')
+    else:
+        form = ProductForm()
+    return render(request, 'book_app/product_new_from_url.html', {'form': form})
 
 
 @login_required
@@ -103,7 +130,7 @@ def account_list(request):
 
         # Webスクレイピングを実行
         # DoujinShop.GetProductList(account, request.user)
-        futures.ThreadPoolExecutor(max_workers=4).submit(fn=DoujinShop.GetProductList, account=account, request_by=request.user)
+        _executer.submit(fn=DoujinShop.GetProductList, account=account, request_by=request.user)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/account/list/')

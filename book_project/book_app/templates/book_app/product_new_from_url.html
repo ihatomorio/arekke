@@ -1,0 +1,33 @@
+{% extends 'book_app/base.html' %}
+{% load widget_tweaks %}
+
+<!-- title block -->
+{% block title %} - Product New{% endblock %}
+
+<!-- Custom styles for this page -->
+{% block pagecss %}
+{% endblock %}
+
+<!-- Page level plugins -->
+{% block pageplugin %}
+{% endblock %}
+
+
+{% block content %}
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <h2>本を追加</h2>
+    <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
+        <div class="form-group col">
+            {{ form.url.label_tag }}
+            {{ form.url | add_class:"form-control" }}
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">追加</button>
+        </div>
+    </form>
+
+</div>
+<!-- /.container-fluid -->
+{% endblock %}
