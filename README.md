@@ -29,9 +29,9 @@
 
     ```shell
     cd book_project
-    python manage.py makemigrations
-    python manage.py migrate
-    python manage.py createsuperuser
+    python3 manage.py makemigrations
+    python3 manage.py migrate
+    python3 manage.py createsuperuser
     ```
 
 ## Start Server
