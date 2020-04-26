@@ -37,6 +37,8 @@ class DoujinShop(metaclass=ABCMeta):
         elif 'www.melonbooks.co.jp' in product.url:
             doujinshop = Melonbooks()
         else:
+            product.title = '未対応URL'
+            product.save()
             return
 
         # 店の番号をセット
