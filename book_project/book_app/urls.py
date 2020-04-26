@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.product_list, name='product_list'), #R
     path('product/list/', views.product_list, name='product_list'), # delete future
     path('product/new/', views.product_new, name='product_new'),
+    path('product/new-from-url/', views.product_new_from_url, name='product_new_from_url'),
     path('product/edit/<int:pk>', views.product_edit, name='product_edit'),
 
     # account pages
