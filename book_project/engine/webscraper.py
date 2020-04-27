@@ -171,7 +171,7 @@ class DoujinShop(metaclass=ABCMeta):
     # ブラウザの生成
     def __OpenBrowser(self, url):
         options = Options()
-        options.binary_location = '/usr/bin/google-chrome-beta'
+        options.binary_location = '/usr/bin/google-chrome'
         options.add_argument('--headless')
         options.add_argument('--no-sandbox') #rootに必要
         self.driver = webdriver.Chrome(options=options)
