@@ -22,29 +22,39 @@ class DLSite(DoujinShop):
         return self.driver.find_element_by_xpath('//*[@id="work_name"]/a').text
 
     def _GetCircle(self):
-        try:
-            name_type = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr/th').text
-            if( name_type == 'サークル名' ):
-                circle_name = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr/td/span/a').text
-                return circle_name
-            else:
-                auth_company = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr[2]/td/span/a').text
-                return auth_company
-        except:
-            return None
-
+        name_type = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr/th').text
+        if( name_type == 'サークル名' ):
+            # 同人誌
+            circle_name = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr/td/span/a').text
+            return circle_name
+        else:
+            # コミック
+            auth_company = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr[2]/td/span/a').text
+            return auth_company
 
     def _GetAuthor(self):
-        author_html = self.driver.find_element_by_id('work_right_name').get_attribute('innerHTML')
-        # parse as xml
-        root = ET.fromstring(author_html)
-        # find author row
-        for tag_tr in root.iter('tr'):
-            # find author column at row
-            for child in tag_tr.iter('th'):
-                # if author, return inner text
-                if( child.text == '著者'):
-                    return tag_tr.find('./td/a').text
+        # 同人誌
+        column_title = self.driver.find_element_by_xpath('//*[@id="work_outline"]/tbody/tr[2]/th').text
+        if( column_title == '作者'):
+            return self.driver.find_element_by_xpath('//*[@id="work_outline"]/tbody/tr[2]/td').text
+
+        # コミック
+        column_title = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr[1]/th').text
+        if( column_title == '著者'):
+            return self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr[1]/td').text
+
+        return None
+
+        # author_html = self.driver.find_element_by_id('work_right_name').get_attribute('innerHTML')
+        # # parse as xml
+        # root = ET.fromstring(author_html)
+        # # find author row
+        # for tag_tr in root.iter('tr'):
+        #     # find author column at row
+        #     for child in tag_tr.iter('th'):
+        #         # if author, return inner text
+        #         if( child.text == '著者'):
+        #             return tag_tr.find('./td/a').text
 
     def _GetImageUrl(self):
         image_html = self.driver.find_element_by_css_selector('li.slider_item.active').get_attribute("innerHTML")
