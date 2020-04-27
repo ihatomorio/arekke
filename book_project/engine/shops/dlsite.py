@@ -26,10 +26,12 @@ class DLSite(DoujinShop):
         pass
 
     def _GetImageUrl(self):
-        return self.driver.find_element_by_xpath("/html/body/div[3]/div[4]/div[1]/div/div[1]/div[1]/div/div/div[2]/div/div[1]/div[1]/ul/li[1]/img").get_attribute("src")
+        image_html = self.driver.find_element_by_css_selector('li.slider_item.active').get_attribute("innerHTML")
+        image_url = re.findall(r'(img.dlsite.jp/modpub/images2/work/.*_img_main\.jpg)', image_html)
+        return 'https://' + image_url[0]
 
     def _GetImagePath(self, image_url):
-        filename = re.findall(r'https://.*/(RJ.*_img_main\.jpg)', image_url)
+        filename = re.findall(r'https://.*/([RB]J.*_img_main\.jpg)', image_url)
         return "dlsite/" + filename[0]
     
     def _GetLoginUrl(self):
@@ -49,9 +51,8 @@ class DLSite(DoujinShop):
         assert '購入履歴' in self.driver.find_element_by_css_selector("h1").text
 
     def _GetProductUrlList(self):
-        # 一覧ページを開く
-        # self.driver.get(self._GetProductListUrl())
-        
+        url_list = []
+
         # 18歳以上です
         try:
             self.driver.find_element_by_css_selector('body > div.adult_check_box._adultcheck > div > ul > li.btn_yes.btn-approval > a').click()
@@ -61,11 +62,19 @@ class DLSite(DoujinShop):
         # クーポンを閉じる
         try:
             self.driver.find_element_by_class_name('fs16').click()
-            
-            # 一覧ページに戻る
-            self.driver.get(self._GetProductListUrl())
         except NoSuchElementException:
             pass
+
+        # 今月の購入履歴を取得
+        self.driver.get('https://www.dlsite.com/home/mypage/userbuy')
+
+        for element in self.driver.find_elements_by_class_name('work_name'):
+            inner_html = element.get_attribute("innerHTML")
+            infos = re.findall(r' +<a href="(http.*\.html)">(.*)</a>', inner_html)
+            url_list.append(infos[0][0])
+
+        # 過去の購入履歴を取得
+        self.driver.get(self._GetProductListUrl())
 
         # 購入月:すべて を選択
         Select(self.driver.find_element_by_id('_start')).select_by_value('all')
@@ -73,11 +82,21 @@ class DLSite(DoujinShop):
         # 表示 をクリック
         self.driver.find_element_by_id('_display').click()
 
-        url_list = []
-
         for element in self.driver.find_elements_by_class_name('work_name'):
             inner_html = element.get_attribute("innerHTML")
             infos = re.findall(r' +<a href="(http.*\.html)">(.*)</a>', inner_html)
             url_list.append(infos[0][0])
+
+        # コミック:すべて を選択
+        Select(self.driver.find_element_by_id('_type')).select_by_value('14')
+
+        # 表示 をクリック
+        self.driver.find_element_by_id('_display').click()
+
+        for element in self.driver.find_elements_by_class_name('work_1col'):
+            inner_html = element.get_attribute("innerHTML")
+            infos = re.findall(r' +<a href="(https://www.dlsite.com/books/work/=/product_id/.*\.html)">.*</a>', inner_html)
+            for product_url in infos:
+                url_list.append(product_url)
 
         return url_list
