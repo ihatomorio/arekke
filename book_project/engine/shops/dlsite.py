@@ -19,23 +19,20 @@ class DLSite(DoujinShop):
 
     def _GetTitle(self):
         self.driver.implicitly_wait(5)
-        title_html = self.driver.find_element_by_id('work_name').get_attribute('innerHTML')
-        # parse as xml
-        root = ET.fromstring(title_html)
-        # return inner text
-        return root.text
+        return self.driver.find_element_by_xpath('//*[@id="work_name"]/a').text
 
     def _GetCircle(self):
-        circle_html = self.driver.find_element_by_id('work_right_name').get_attribute('innerHTML')
-        # parse as xml
-        root = ET.fromstring(circle_html)
-        # find circle row
-        for tag_tr in root.iter('tr'):
-            # find circle column at row
-            for child in tag_tr.iter('th'):
-                # if circle, return inner text
-                if( child.text == 'サークル名' ):
-                    return tag_tr.find('./td/span/a').text
+        try:
+            name_type = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr/th').text
+            if( name_type == 'サークル名' ):
+                circle_name = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr/td/span/a').text
+                return circle_name
+            else:
+                auth_company = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr[2]/td/span/a').text
+                return auth_company
+        except:
+            return None
+
 
     def _GetAuthor(self):
         author_html = self.driver.find_element_by_id('work_right_name').get_attribute('innerHTML')
