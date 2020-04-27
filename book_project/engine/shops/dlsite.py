@@ -1,5 +1,7 @@
 import re
 
+import xml.etree.ElementTree as ET
+
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import Select
 
@@ -17,13 +19,35 @@ class DLSite(DoujinShop):
 
     def _GetTitle(self):
         self.driver.implicitly_wait(5)
-        return self.driver.find_element_by_xpath('//*[@id="work_name"]/a').text
+        title_html = self.driver.find_element_by_id('work_name').get_attribute('innerHTML')
+        # parse as xml
+        root = ET.fromstring(title_html)
+        # return inner text
+        return root.text
 
     def _GetCircle(self):
-        return self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr/td/span/a').text
+        circle_html = self.driver.find_element_by_id('work_right_name').get_attribute('innerHTML')
+        # parse as xml
+        root = ET.fromstring(circle_html)
+        # find circle row
+        for tag_tr in root.iter('tr'):
+            # find circle column at row
+            for child in tag_tr.iter('th'):
+                # if circle, return inner text
+                if( child.text == 'サークル名' ):
+                    return tag_tr.find('./td/span/a').text
 
     def _GetAuthor(self):
-        pass
+        author_html = self.driver.find_element_by_id('work_right_name').get_attribute('innerHTML')
+        # parse as xml
+        root = ET.fromstring(author_html)
+        # find author row
+        for tag_tr in root.iter('tr'):
+            # find author column at row
+            for child in tag_tr.iter('th'):
+                # if author, return inner text
+                if( child.text == '著者'):
+                    return tag_tr.find('./td/a').text
 
     def _GetImageUrl(self):
         image_html = self.driver.find_element_by_css_selector('li.slider_item.active').get_attribute("innerHTML")
