@@ -15,6 +15,17 @@ from ..webscraper import DoujinShop
 
 class FanzaComic(DoujinShop):
     def _CheckOpened(self):
+        # ページが無い場合はタイトルが変化(エラーが発生しました)するため先に処理
+        # ページが無いことを検知する
+        try:
+            if '有効なコンテンツを見つけることができませんでした。' in self.driver.find_element_by_css_selector('#w > div > div').text:
+                raise self.NoSuchProductPageException
+            else:
+                # 仮でこの例外を投げる
+                raise NoSuchElementException
+        except NoSuchElementException:
+            pass
+
         # タイトルに'FANZA電子書籍'が含まれていることを確認する。
         assert 'FANZA電子書籍' in self.driver.title
 
