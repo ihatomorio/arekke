@@ -48,8 +48,17 @@ class DoujinShop(metaclass=ABCMeta):
         # 取得処理を実行
         try:
             doujinshop.__UpdateProductInfoFromUrl(product, product.url)
+
+        # 商品が無い場合
+        except DoujinShop.NoSuchProductPageException:
+            # loadingまたは取得失敗の場合のみ更新
+            if( product.title == 'loading' or product.title == '取得失敗' ):
+                product.title = '商品ページなし'
+
+        # その他の例外
         except:
             product.title = '取得失敗'
+
 
         # 取得結果の保存
         product.save()
@@ -104,40 +113,32 @@ class DoujinShop(metaclass=ABCMeta):
         self.__OpenBrowser(url)
         print('URL: ', url)
 
+        # ページのタイトルを確認する
+        self._CheckOpened()
+
+        # 商品名を取得
+        product.title = self._GetTitle()
+
         try:
-            # ページのタイトルを確認する
-            self._CheckOpened()
+            # ショップ名称を取得
+            product.circle = self._GetCircle()
         except:
-            print(url)
-            print('Fail: _CheckOpened')
-            raise 'Open Fail'
-        else:
-            try:
-                # 商品名を取得
-                product.title = self._GetTitle()
-            except:
-                product.title = '取得失敗'
+            product.circle = ''
 
-            try:
-                # ショップ名称を取得
-                product.circle = self._GetCircle()
-            except:
-                product.circle = ''
+        try:
+            # 作家名を取得
+            product.author = self._GetAuthor()
+        except:
+            product.author = ''
 
-            try:
-                # 作家名を取得
-                product.author = self._GetAuthor()
-            except:
-                product.author = ''
+        try:
+            # 画像を取得
+            image_url = self._GetImageUrl()
+            if image_url != None:
+                product.image_path = self.__GetImage(image_url)
+        except:
+            product.image_url = ''
 
-            try:
-                # 画像を取得
-                image_url = self._GetImageUrl()
-                if image_url != None:
-                    product.image_path = self.__GetImage(image_url)
-            except:
-                product.image_url = ''
-        finally:
             # ブラウザを閉じる
             self.__CloseBrowser()
 
@@ -245,4 +246,7 @@ class DoujinShop(metaclass=ABCMeta):
 
     @abstractmethod
     def _GetProductUrlList(self):
+        pass
+
+    class NoSuchProductPageException(Exception):
         pass

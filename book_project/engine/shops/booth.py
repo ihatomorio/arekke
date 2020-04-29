@@ -18,17 +18,17 @@ class Booth(DoujinShop):
         except NoSuchElementException:
             pass
 
+        # ページが無いことを検知する
+        try:
+            if 'The item you were looking for doesn\'t exist.' in self.driver.find_element_by_css_selector('h1').text:
+                raise self.NoSuchProductPageException
+        except NoSuchElementException:
+            pass
+
     def _GetShopNumber(self):
         return Product.BOOTH
 
     def _GetTitle(self):
-        # ページが無いことを検知する
-        try:
-            if 'The item you were looking for doesn\'t exist.' in self.driver.find_element_by_css_selector('h1').text:
-                return '商品ページなし'
-        except NoSuchElementException:
-            pass
-
         return self.driver.find_element_by_css_selector("h2.u-tpg-title1").text
 
     def _GetCircle(self):

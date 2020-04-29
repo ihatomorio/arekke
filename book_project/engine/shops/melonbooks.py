@@ -23,19 +23,18 @@ class Melonbooks(DoujinShop):
         except NoSuchElementException:
             pass
 
+        # ページが無いことを検知する
+        try:
+            if 'ご指定のページはございません。' in self.driver.find_element_by_css_selector('body > div.box-warning-01 > p').text:
+                raise self.NoSuchProductPageException
+        except NoSuchElementException:
+            pass
+
     def _GetShopNumber(self):
         return Product.MELONBOOKS
 
     def _GetTitle(self):
-        # ページが無いことを検知する
-        try:
-            if 'ご指定のページはございません。' in self.driver.find_element_by_css_selector('body > div.box-warning-01 > p').text:
-                return '商品ページなし'
-        except NoSuchElementException:
-            pass
-
-        return self.driver.find_element_by_css_selector('h1.str').text
-        
+        return self.driver.find_element_by_css_selector('h1.str').text        
 
     def _GetCircle(self):
         return self.driver.find_element_by_css_selector('a.circle').text
