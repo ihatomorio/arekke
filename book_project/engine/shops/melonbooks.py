@@ -22,6 +22,12 @@ class Melonbooks(DoujinShop):
         except NoSuchElementException:
             pass
 
+        # 年齢認証の「はい」をクリック
+        try:
+            self.driver.find_element_by_css_selector('a.f_left.yes').click()
+        except NoSuchElementException:
+            pass
+
     def _GetShopNumber(self):
         return Product.MELONBOOKS
 
