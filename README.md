@@ -1,4 +1,4 @@
-# Arekke - Have I bought this book
+# Arekke - Manage your ecchi book
 
 あれ？この本買ったっけ？な書籍管理アプリです。
 
