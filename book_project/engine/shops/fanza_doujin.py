@@ -38,7 +38,7 @@ class FanzaDoujin(DoujinShop):
 
     def _GetLoginUrl(self):
         return 'https://book.dmm.co.jp/library/?age_limit=all&expired=0'
-    
+
     def _GetProductListUrl(self):
         return 'https://www.dmm.co.jp/dc/-/mylibrary/'
 

@@ -21,7 +21,7 @@ class Melonbooks(DoujinShop):
                 raise 'page not found'
         except NoSuchElementException:
             pass
-            
+
     def _GetShopNumber(self):
         return Product.MELONBOOKS
 
@@ -30,7 +30,7 @@ class Melonbooks(DoujinShop):
 
     def _GetCircle(self):
         return self.driver.find_element_by_css_selector('a.circle').text
-        
+
     def _GetAuthor(self):
         # ページ下部の表の要素を取得
         # return self.driver.find_element_by_xpath('//*[@id="description"]/table/tbody/tr[3]/td/a').text
@@ -83,9 +83,9 @@ class Melonbooks(DoujinShop):
 
         # GO をクリック
         self.driver.find_element_by_css_selector('#form1 > div > div > div > div.clm.clm_r > span.input_btn.br_5 > a').click()
-    
+
         url_list = []
-            
+
         while True:
             # 商品を含む要素を取得
             product_elements = self.driver.find_elements_by_css_selector('td.product')
@@ -95,7 +95,7 @@ class Melonbooks(DoujinShop):
                 inner_html = element.get_attribute("innerHTML")
                 infos = re.findall(r'<p class="name"><a href="(/detail/detail.php\?product_id=\d+)" title="商品番号:\d+ .*">商品番号:\d+<br>(.*)</a></p>', inner_html)
                 url = 'https://www.melonbooks.co.jp' + infos[0][0]
-                
+
                 # URLリストに追加
                 url_list.append(url)
 
@@ -119,7 +119,7 @@ class Melonbooks(DoujinShop):
 
             except TimeoutException:
                 # ロードがタイムアウトした
-                
+
                 # スクリーンショットを撮る。
                 self.driver.save_screenshot('error_page_screenshot.png')
                 print('Fail: Melonbooks')

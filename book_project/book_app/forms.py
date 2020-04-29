@@ -27,13 +27,13 @@ class ProductForm(forms.Form):
         max_length=256,
         required=False,
     )
-    
+
     circle = forms.CharField(
         label='サークル名',
         max_length=256,
         required=False,
     )
-    
+
     bought_date = forms.DateField(
         label='購入日',
         required=False,

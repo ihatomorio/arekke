@@ -64,10 +64,10 @@ class DLSite(DoujinShop):
     def _GetImagePath(self, image_url):
         filename = re.findall(r'https://.*/([RB]J.*_img_main\.jpg)', image_url)
         return "dlsite/" + filename[0]
-    
+
     def _GetLoginUrl(self):
         return 'https://login.dlsite.com/login'
-    
+
     def _GetProductListUrl(self):
         return 'https://www.dlsite.com/maniax/mypage/userbuy/complete'
 

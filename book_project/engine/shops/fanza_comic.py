@@ -40,7 +40,7 @@ class FanzaComic(DoujinShop):
 
     def _GetLoginUrl(self):
         return 'https://book.dmm.co.jp/library/?age_limit=all&expired=0'
-    
+
     def _GetProductListUrl(self):
         return 'https://book.dmm.co.jp/library/?age_limit=all&expired=0'
 
@@ -93,7 +93,7 @@ class FanzaComic(DoujinShop):
                     series_url = element.get_attribute('href')
                     print(series_url)
                     # not implemented
-                
+
             except NoSuchElementException:
                 pass
 
@@ -112,5 +112,5 @@ class FanzaComic(DoujinShop):
 
         # not reach
         return url_list
-        
+
         # シリーズの場合 a.m-boxListBookProductBlock__btn__series
