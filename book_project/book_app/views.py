@@ -33,7 +33,7 @@ def product_list(request):
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/')
-    
+
     # render() shortcut eliminates HttpResponce and loader
     return render(request, 'book_app/product_list.html', {'products': products})
 
@@ -114,7 +114,7 @@ def product_edit(request, pk):
             'circle': procuct_object.circle,
             'image_path': procuct_object.image_path,
             })
-    
+
     return render(request, 'book_app/product_new.html', {'form': form})
 
 
@@ -134,7 +134,7 @@ def account_list(request):
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/account/list/')
-    
+
     return render(request, 'book_app/account_list.html', {'accounts': accounts})
 
 

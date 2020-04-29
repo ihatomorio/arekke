@@ -73,10 +73,10 @@ class DoujinShop(metaclass=ABCMeta):
             doujinshop = Melonbooks()
         else:
             return
-        
+
         # インスタンスに対して商品一覧取得を開始
         doujinshop.__GetProductList(account, request_by)
-        
+
         # 取得完了の時間を入れる
         account.date = timezone.now()
         account.save()

@@ -23,7 +23,7 @@ class Product(models.Model):
         (FANZA_DOUJIN, "FANZA同人"),
         (MELONBOOKS, "メロンブックス"),
     )
-    
+
     # 所有者
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     # 書名
@@ -71,7 +71,7 @@ class Account(models.Model):
         (FANZA_DOUJIN, "FANZA同人"),
         (MELONBOOKS, "メロンブックス"),
     )
-    
+
     # 所有者
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # サイト
