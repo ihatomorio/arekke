@@ -16,11 +16,6 @@ class Melonbooks(DoujinShop):
     def _CheckOpened(self):
         # タイトルに'メロンブックス'が含まれていることを確認する。
         assert 'メロンブックス' in self.driver.title
-        try:
-            if 'ご指定のページはございません。' in self.driver.find_element_by_css_selector('body > div.box-warning-01 > p').text:
-                raise 'page not found'
-        except NoSuchElementException:
-            pass
 
         # 年齢認証の「はい」をクリック
         try:
@@ -32,7 +27,15 @@ class Melonbooks(DoujinShop):
         return Product.MELONBOOKS
 
     def _GetTitle(self):
+        # ページが無いことを検知する
+        try:
+            if 'ご指定のページはございません。' in self.driver.find_element_by_css_selector('body > div.box-warning-01 > p').text:
+                return '商品ページなし'
+        except NoSuchElementException:
+            pass
+
         return self.driver.find_element_by_css_selector('h1.str').text
+        
 
     def _GetCircle(self):
         return self.driver.find_element_by_css_selector('a.circle').text
