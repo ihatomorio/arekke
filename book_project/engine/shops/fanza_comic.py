@@ -33,7 +33,7 @@ class FanzaComic(DoujinShop):
         return Product.FANZA_COMIC
 
     def _GetTitle(self):
-        return self._SupressBracket(self.driver.find_element_by_css_selector('#title').text)
+        return self._SupressSuffixedBracket(self.driver.find_element_by_css_selector('#title').text)
 
     def _GetCircle(self):
         list_title_elements = self.driver.find_elements_by_css_selector('dt.m-boxDetailProductInfo__list__ttl')

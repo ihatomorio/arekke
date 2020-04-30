@@ -262,9 +262,9 @@ class DoujinShop(metaclass=ABCMeta):
             # マッチの最終パターンのみ返す
             return matched[0][len(matched[0])-1]
 
-    def _SupressBracket(self, text):
+    def _SupressSuffixedBracket(self, text):
         # 正規表現を試みる
-        matched = re.findall(r'(.*?)(【.*】)+', text)
+        matched = re.findall(r'(.*?)(【.*】)+$', text)
         if len(matched) == 0:
             # マッチ文字列なし
             return text
