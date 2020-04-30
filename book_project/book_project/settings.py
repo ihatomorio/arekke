@@ -135,4 +135,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # ログイン後のURL
-LOGIN_REDIRECT_URL = '/product/list/'
+LOGIN_REDIRECT_URL = '/'
