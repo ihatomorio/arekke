@@ -17,11 +17,7 @@ class FanzaDoujin(DoujinShop):
         return Product.FANZA_DOUJIN
 
     def _GetTitle(self):
-        title = self.driver.find_element_by_css_selector('h1.productTitle__txt').text
-        if '%OFF】 ' in title or '％OFF】 ' in title :
-            matched = re.findall(r'【[0-9]0[%％]OFF】(.*)', title)
-            title = matched[0]
-        return title
+        return self._SupressDiscount(self.driver.find_element_by_css_selector('h1.productTitle__txt').text)
 
     def _GetCircle(self):
         return self.driver.find_element_by_css_selector('a.circleName__txt').text

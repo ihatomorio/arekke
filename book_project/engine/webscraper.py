@@ -250,3 +250,14 @@ class DoujinShop(metaclass=ABCMeta):
 
     class NoSuchProductPageException(Exception):
         pass
+
+    def _SupressDiscount(self, text):
+        # 正規表現を試みる
+        matched = re.findall(r'(【\d\d[%％](OFF|還元)】)+ *(.*)', text)
+        if len(matched) == 0:
+            # マッチ文字列なし
+            return text
+        else:
+            # マッチの最終パターンのみ返す
+            return matched[0][len(matched[0])-1]
+
