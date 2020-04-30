@@ -77,7 +77,7 @@ def product_new_from_url(request):
             added_date = timezone.now(),
         )
 
-        _executer.submit(fn=DoujinShop.UpdateProductInfo, product=added_product, set_shop_num=True)
+        _executer.submit(fn=DoujinShop.UpdateProductInfo, product=added_product, set_shop_num=False)
 
         return redirect('/product/new-from-url/')
     else:
