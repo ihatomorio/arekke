@@ -271,3 +271,11 @@ class DoujinShop(metaclass=ABCMeta):
         else:
             # マッチの先頭パターンのみ返す
             return matched[0][0]
+
+    def _GetDetailFromTable(self, title_elements, detail_elements, requirement):
+        # title_elementsについて入っているものチェックし、requirementのときその内容を返す
+        for title_element, detail_element in zip(title_elements, detail_elements):
+            if title_element.text == requirement:
+                return detail_element.text
+        else:
+            return None
