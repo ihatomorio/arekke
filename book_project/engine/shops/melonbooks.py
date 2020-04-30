@@ -66,7 +66,7 @@ class Melonbooks(DoujinShop):
                     return ''
 
     def _GetImageUrl(self):
-        return self.driver.find_element_by_css_selector('a.tag_sample1').get_attribute("href")
+        return self.driver.find_element_by_css_selector('img.img_0').get_attribute("src")
 
     def _GetImagePath(self, image_url):
         filename = re.findall(r'https://.*image=(.*\.jpg)', image_url)
