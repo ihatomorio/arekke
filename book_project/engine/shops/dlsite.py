@@ -39,17 +39,20 @@ class DLSite(DoujinShop):
             return auth_company
 
     def _GetAuthor(self):
-        # 同人誌
-        column_title = self.driver.find_element_by_xpath('//*[@id="work_outline"]/tbody/tr[2]/th').text
-        if( column_title == '作者'):
-            return self.driver.find_element_by_xpath('//*[@id="work_outline"]/tbody/tr[2]/td').text
+        # 同人誌は作者
+        title_elements = self.driver.find_elements_by_css_selector('#work_outline > tbody > tr > th')
+        detail_elements = self.driver.find_elements_by_css_selector('#work_outline > tbody > tr > td')
 
-        # コミック
-        column_title = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr[1]/th').text
-        if( column_title == '著者'):
-            return self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr[1]/td').text
+        author = self._GetDetailFromTable(title_elements, detail_elements, '作者')
+        if author != None:
+            return author
 
-        return None
+        # コミックは著者
+        title_elements = self.driver.find_elements_by_css_selector('#work_maker > tbody > tr > th')
+        detail_elements = self.driver.find_elements_by_css_selector('#work_maker > tbody > tr > td')
+
+        author = self._GetDetailFromTable(title_elements, detail_elements, '著者')
+        return author
 
     def _GetImageUrl(self):
         image_html = self.driver.find_element_by_css_selector('li.slider_item.active').get_attribute("innerHTML")
