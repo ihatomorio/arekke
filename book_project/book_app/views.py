@@ -99,7 +99,8 @@ def product_edit(request, pk):
             procuct_object.title = cd['title']
             procuct_object.author = cd['author']
             procuct_object.circle = cd['circle']
-            procuct_object.image_path = cd['image_path']
+            if cd['image_path'] != None:
+                procuct_object.image_path = cd['image_path']
 
             procuct_object.save()
             return redirect('/')
