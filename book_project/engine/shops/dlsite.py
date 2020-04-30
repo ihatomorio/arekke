@@ -45,17 +45,6 @@ class DLSite(DoujinShop):
 
         return None
 
-        # author_html = self.driver.find_element_by_id('work_right_name').get_attribute('innerHTML')
-        # # parse as xml
-        # root = ET.fromstring(author_html)
-        # # find author row
-        # for tag_tr in root.iter('tr'):
-        #     # find author column at row
-        #     for child in tag_tr.iter('th'):
-        #         # if author, return inner text
-        #         if( child.text == '著者'):
-        #             return tag_tr.find('./td/a').text
-
     def _GetImageUrl(self):
         image_html = self.driver.find_element_by_css_selector('li.slider_item.active').get_attribute("innerHTML")
         image_url = re.findall(r'(img.dlsite.jp/modpub/images2/work/.*_img_main\.jpg)', image_html)
