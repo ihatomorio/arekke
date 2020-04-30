@@ -14,6 +14,12 @@ class DLSite(DoujinShop):
         # タイトルに'DLsite'が含まれていることを確認する。
         assert 'DLsite' in self.driver.title
 
+        # はい、18歳以上です をクリック
+        try:
+            self.driver.find_element_by_css_selector('li.btn_yes.btn-approval >a').click()
+        except NoSuchElementException:
+            pass
+
     def _GetShopNumber(self):
         return Product.DLSITE
 
