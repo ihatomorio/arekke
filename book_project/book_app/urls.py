@@ -12,5 +12,5 @@ urlpatterns = [
     # account pages
     path('account/list/', views.account_list, name='account_list'),
     path('account/new/', views.account_new, name='account_new'),
-    path('account/edit/<int:pk>', views.product_new, name='account_edit'),
+    path('account/edit/<int:pk>', views.account_edit, name='account_edit'),
 ]

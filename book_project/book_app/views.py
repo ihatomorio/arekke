@@ -157,3 +157,27 @@ def account_new(request):
         form = AccountForm()
     return render(request, 'book_app/account_new.html', {'form': form})
 
+
+@login_required
+def account_edit(request, pk):
+    account_object = get_object_or_404(Account, pk=pk)
+
+    if request.method == "POST":
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+
+            account_object.shop = cd['shop']
+            account_object.user = cd['user']
+            account_object.password = cd['password']
+
+            account_object.save()
+            return redirect('/account/list/')
+    else:
+        form = AccountForm({
+            'shop': account_object.shop,
+            'user': account_object.user,
+            'password': account_object.password,
+            })
+
+    return render(request, 'book_app/account_new.html', {'form': form})

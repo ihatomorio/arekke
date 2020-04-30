@@ -30,7 +30,7 @@
   <p class="mb-4">現在自動取得はDLSite, FANZA同人, FANZA電子書籍(単行本のみ), メロンブックスのみです。取得にはとても時間がかかります。</p>
 
   <!-- functions -->
-  <a class="btn btn-primary" href="/account/new/">追加</a>
+  <a class="btn btn-primary" href="{% url 'account_new' %}">追加</a>
 
   <!-- DataTales Example -->
   <div class="card shadow my-3">
@@ -51,7 +51,7 @@
         <tbody>
           {% for accounts in accounts %}
           <tr>
-            <td>{{accounts.get_shop_display}}</td>
+            <td><a href="{% url 'account_edit' accounts.pk %}">{{accounts.get_shop_display}}</a></td>
             <td>{{accounts.date}}</td>
             <td>
               <form method="POST">{% csrf_token %}
