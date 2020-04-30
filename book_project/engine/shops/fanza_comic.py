@@ -36,7 +36,15 @@ class FanzaComic(DoujinShop):
         return self._SupressBracket(self.driver.find_element_by_css_selector('#title').text)
 
     def _GetCircle(self):
-        pass
+        list_title_elements = self.driver.find_elements_by_css_selector('dt.m-boxDetailProductInfo__list__ttl')
+        list_detail_elements = self.driver.find_elements_by_css_selector('dd.m-boxDetailProductInfo__list__description')
+        
+        # タイトルについてチェックし、出版社のときその内容を返す
+        for title_element, detail_element in zip(list_title_elements, list_detail_elements):
+            if title_element.text == '出版社':
+                return detail_element.text
+        else:
+            return None
 
     def _GetAuthor(self):
         elements = self.driver.find_elements_by_css_selector("ul.m-boxDetailProductInfoMainList__description__list")
