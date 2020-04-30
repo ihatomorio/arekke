@@ -24,8 +24,7 @@ class DLSite(DoujinShop):
         return Product.DLSITE
 
     def _GetTitle(self):
-        self.driver.implicitly_wait(5)
-        return self.driver.find_element_by_xpath('//*[@id="work_name"]/a').text
+        return self._SupressSuffixedBracket(self.driver.find_element_by_css_selector('#work_name').text)
 
     def _GetCircle(self):
         name_type = self.driver.find_element_by_xpath('//*[@id="work_maker"]/tbody/tr/th').text
