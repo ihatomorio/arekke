@@ -39,12 +39,7 @@ class FanzaComic(DoujinShop):
         list_title_elements = self.driver.find_elements_by_css_selector('dt.m-boxDetailProductInfo__list__ttl')
         list_detail_elements = self.driver.find_elements_by_css_selector('dd.m-boxDetailProductInfo__list__description')
         
-        # タイトルについてチェックし、出版社のときその内容を返す
-        for title_element, detail_element in zip(list_title_elements, list_detail_elements):
-            if title_element.text == '出版社':
-                return detail_element.text
-        else:
-            return None
+        return self._GetDetailFromTable(list_title_elements, list_detail_elements, '出版社')
 
     def _GetAuthor(self):
         elements = self.driver.find_elements_by_css_selector("ul.m-boxDetailProductInfoMainList__description__list")
