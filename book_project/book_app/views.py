@@ -143,13 +143,15 @@ def account_list(request):
 def account_new(request):
     if request.method == "POST":
         form = AccountForm(request.POST)
-        if form.is_valid():
+        
+        if form.is_valid() and form.cleaned_data['shop'] != '0':
+            cd = form.cleaned_data
             # アカウントを作って保存
             Account.objects.create(
                 owner = request.user,
-                shop = form.cleaned_data['shop'],
-                user = form.cleaned_data['user'],
-                password = form.cleaned_data['password'],
+                shop = cd['shop'],
+                user = cd['user'],
+                password = cd['password'],
             )
 
             return redirect('/account/list/')
@@ -164,8 +166,10 @@ def account_edit(request, pk):
 
     if request.method == "POST":
         form = AccountForm(request.POST)
-        if form.is_valid():
+        
+        if form.is_valid() and form.cleaned_data['shop'] != '0':
             cd = form.cleaned_data
+            print(cd['shop'])
 
             account_object.shop = cd['shop']
             account_object.user = cd['user']
