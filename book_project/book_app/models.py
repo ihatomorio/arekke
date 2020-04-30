@@ -45,9 +45,7 @@ class Product(models.Model):
 
     # 自身の情報
     def __str__(self):
-        for shops in self.SHOPS:
-            if shops[0] == self.shop:
-                return self.owner.__str__() + ': ' + self.title.__str__()
+        return self.owner.__str__() + ': ' + self.title.__str__()
 
 
 # 店舗情報
