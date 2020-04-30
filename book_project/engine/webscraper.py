@@ -4,6 +4,7 @@ import re
 
 import chromedriver_binary
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 import urllib.request
 
@@ -122,13 +123,13 @@ class DoujinShop(metaclass=ABCMeta):
         try:
             # ショップ名称を取得
             product.circle = self._GetCircle()
-        except:
+        except NoSuchElementException:
             product.circle = ''
 
         try:
             # 作家名を取得
             product.author = self._GetAuthor()
-        except:
+        except NoSuchElementException:
             product.author = ''
 
         try:
@@ -136,7 +137,7 @@ class DoujinShop(metaclass=ABCMeta):
             image_url = self._GetImageUrl()
             if image_url != None:
                 product.image_path = self.__GetImage(image_url)
-        except:
+        except NoSuchElementException:
             product.image_url = ''
 
             # ブラウザを閉じる

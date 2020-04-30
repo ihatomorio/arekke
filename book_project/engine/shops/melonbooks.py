@@ -37,7 +37,11 @@ class Melonbooks(DoujinShop):
         return self.driver.find_element_by_css_selector('h1.str').text        
 
     def _GetCircle(self):
-        return self.driver.find_element_by_css_selector('a.circle').text
+        try:
+            return self.driver.find_element_by_css_selector('a.circle').text
+        except NoSuchElementException:
+            # 成年コミックスは出版社を取得
+            return self.driver.find_element_by_css_selector('span.circle').text
 
     def _GetAuthor(self):
         # ページ下部の表の要素を取得
