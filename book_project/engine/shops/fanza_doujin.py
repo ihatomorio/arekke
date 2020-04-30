@@ -17,14 +17,14 @@ class FanzaDoujin(DoujinShop):
         return Product.FANZA_DOUJIN
 
     def _GetTitle(self):
-        title = self.driver.find_element_by_css_selector('#doujinLIst > div.l-areaMainColumn > div.l-areaProductTitle > div.m-productHeader > div > div > div.m-productInfo > div > div > div > div > h1').text
+        title = self.driver.find_element_by_css_selector('h1.productTitle__txt').text
         if '%OFF】 ' in title or '％OFF】 ' in title :
             matched = re.findall(r'【[0-9]0[%％]OFF】(.*)', title)
             title = matched[0]
         return title
 
     def _GetCircle(self):
-        return self.driver.find_element_by_xpath('//*[@id="doujinLIst"]/div[2]/div[1]/div[2]/div/div[1]/div/div/div/a').text
+        return self.driver.find_element_by_css_selector('a.circleName__txt').text
 
     def _GetAuthor(self):
         pass

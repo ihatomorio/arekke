@@ -29,7 +29,7 @@
         // get data where you clicked
         var data = table.cell(this).data();
         // just neither None nor blank(undefined)
-        if( data != 'None' && data != undefined ){
+        if (data != 'None' && data != undefined) {
           // input to serach query form and redraw
           table.search(data).draw();
         }
@@ -88,17 +88,22 @@
           {% endif %}
         </td>
         <td>
+          <!-- start  spinner -->
           {% if products.title == 'loading' %}
           <div class="spinner-border" role="status">
             <span class="sr-only">Loading...</span>
           </div>
           {% endif %}
+          <!-- end  spinner -->
+
+          <!-- start  product name -->
           {% if products.url %}
           <a href="{{products.url}}" target="_blank" rel="noopener noreferrer">{{products.title}}</a>
           {% if products.shop %}<br><span class="badge badge-primary">{{products.get_shop_display}}</span>{% endif %}
           {% else %}
           {{ products.title }}
           {% endif %}
+          <!-- end  product name -->
         </td>
         <td>{{products.author}}</td>
         <td>{{products.circle}}</td>
