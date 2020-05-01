@@ -109,11 +109,13 @@ class Melonbooks(DoujinShop):
             # 要素からURLを取り出し
             for element in product_elements:
                 inner_html = element.get_attribute("innerHTML")
-                infos = re.findall(r'<p class="name"><a href="(/detail/detail.php\?product_id=\d+)" title="商品番号:\d+ .*">商品番号:\d+<br>(.*)</a></p>', inner_html)
+                infos = re.findall(r'<p class="name"><a href="(/detail/detail.php\?product_id=\d+)" title="商品番号:\d+ .*">商品番号:\d+<br>(.*)</a></p>\n +<p class="circle"><a href=".*" title=".*">(.*)</a></p>', inner_html)
                 url = 'https://www.melonbooks.co.jp' + infos[0][0]
+                title = infos[0][1]
+                circle = infos[0][2]
 
                 # URLから取得
-                self._QueueCreateProduct(url)
+                self._QueueCreateProduct(url, title=title, circle=circle)
 
             # 次へ ボタンを押す
             try:

@@ -107,7 +107,7 @@ class DoujinShop(metaclass=ABCMeta):
         account.save()
 
     @staticmethod
-    def CreateFromUrl(url, request_by):
+    def CreateFromUrl(url, request_by, title=None, circle=None, bought_date=None):
         # URL被りがあったら生成中断
         if Product.objects.filter(url=url):
             return
@@ -122,12 +122,20 @@ class DoujinShop(metaclass=ABCMeta):
 
         # 並列処理で商品情報を取得する
         try:
-            DoujinShop.UpdateProductInfo(product, True)
+            instance = DoujinShop.UpdateProductInfo(product, True)
         except Exception as exception:
             print('exception: ', exception, file=sys.stderr)
-            doujinshop.driver.save_screenshot('error.png')
+            instance.driver.save_screenshot('error.png')
             import traceback
             traceback.print_exc()
+
+        if product.title == '商品ページなし':
+            product.title = title
+            product.circle = circle
+
+        product.bought_date = bought_date
+
+        product.save()
 
     def __UpdateProductInfoFromUrl(self, product, url):
         print('Update: ', url)
@@ -187,10 +195,10 @@ class DoujinShop(metaclass=ABCMeta):
         # ブラウザを閉じる
         self.__CloseBrowser()
 
-    def _QueueCreateProduct(self, url, title=None, bought_date=None):
+    def _QueueCreateProduct(self, url, title=None, circle=None, bought_date=None):
         print('Queued:', url)
         assert self.request_by != None
-        _executor.submit(fn=DoujinShop.CreateFromUrl, url=url, request_by=self.request_by)
+        _executor.submit(fn=DoujinShop.CreateFromUrl, url=url, request_by=self.request_by, title=title, circle=circle, bought_date=bought_date)
 
     # ブラウザの生成
     def __OpenBrowser(self, url=None):
