@@ -84,19 +84,15 @@ class FanzaComic(DoujinShop):
 
     def _GetProductUrlList(self):
         url_list = []
+        series_url_list = []
 
+        self.driver.implicitly_wait(30)
+
+        # 購入済みの本一覧ページを探索
         while(True):
             # 単行本の検索
             try:
-                indivisual_book_elements = self.driver.find_elements_by_css_selector('a.m-boxListBookProductBlock__btn__read')
-                for element in indivisual_book_elements:
-                    if 'アプリで読む' == element.text:
-                        appli_url = element.get_attribute('href')
-                        product_id = re.findall(r'product_id=([a-z0-9]*)&shop=digital_book', appli_url)
-                        if product_id:
-                            book_url = 'https://book.dmm.co.jp/detail/' + product_id[0] + '/'
-                            print(book_url)
-                            url_list.append(book_url)
+                self._AddBookUrlFromProductList(url_list)
             except NoSuchElementException:
                 pass
 
@@ -105,26 +101,63 @@ class FanzaComic(DoujinShop):
                 series_book_elements = self.driver.find_elements_by_css_selector('a.m-boxListBookProductBlock__btn__series')
                 for element in series_book_elements:
                     series_url = element.get_attribute('href')
-                    print(series_url)
-                    # not implemented
-
+                    series_url_list.append(series_url)
             except NoSuchElementException:
                 pass
 
             # 次のページへ移動
             try:
-                paging_elements = self.driver.find_elements_by_css_selector('a.m-boxPaging')
-                for paging_element in paging_elements:
-                    if '＞' in paging_element.text:
-                        paging_element.click()
-                        time.sleep(5)
-                        break
-                else: # not breaked
-                    return url_list
+                self._ClickNextPagingButton()
             except NoSuchElementException:
-                return url_list
+                # button not found means no more pages
+                break
 
-        # not reach
+        # シリーズ物のURL一覧から内容を取得する処理
+        for series_url in series_url_list:
+            print('finding at:', series_url)
+            self.driver.get(series_url)
+
+            # 購入済みを探索
+            while(True):
+                # 単行本の検索
+                try:
+                    self._AddBookUrlFromProductList(url_list)
+                except NoSuchElementException:
+                    pass
+
+                # 次のページへ移動
+                try:
+                    self._ClickNextPagingButton()
+                except NoSuchElementException:
+                    # button not found means no more pages
+                    break
+
         return url_list
 
-        # シリーズの場合 a.m-boxListBookProductBlock__btn__series
+    def _AddBookUrlFromProductList(self, book_url_list):
+        indivisual_book_elements = self.driver.find_elements_by_css_selector('a.m-boxListBookProductBlock__btn__read')
+        for element in indivisual_book_elements:
+            if 'アプリで読む' == element.text:
+                appli_url = element.get_attribute('href')
+                if 'digital_book' in appli_url:
+                    product_id = re.findall(r'product_id=([a-z0-9]*)&shop=digital_book', appli_url)
+                    book_url = 'https://book.dmm.co.jp/detail/' + product_id[0] + '/'
+                    book_url_list.append(book_url)
+                    print('found:', book_url)
+                else:
+                    product_id = re.findall(r'product_id=([a-z0-9]*)&shop=digital_gbook', appli_url)
+                    book_url = 'https://book.dmm.com/detail/' + product_id[0] + '/'
+                    book_url_list.append(book_url)
+                    print('found:', book_url)
+
+    def _ClickNextPagingButton(self):
+        # ページ遷移ボタン検索
+        paging_elements = self.driver.find_elements_by_css_selector('a.m-boxPaging')
+        for paging_element in paging_elements:
+            # ボタンが＞ならクリック
+            if '＞' in paging_element.text:
+                paging_element.click()
+                # time.sleep(5)
+                break
+        else: # button not found means no more pages
+            raise NoSuchElementException
