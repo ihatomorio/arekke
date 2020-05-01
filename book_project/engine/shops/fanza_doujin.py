@@ -33,14 +33,14 @@ class FanzaDoujin(DoujinShop):
         return "fanza_doujin/" + filename[0]
 
     def _GetLoginUrl(self):
-        return 'https://book.dmm.co.jp/library/?age_limit=all&expired=0'
+        return self._GetProductListUrl()
 
     def _GetProductListUrl(self):
         return 'https://www.dmm.co.jp/dc/-/mylibrary/'
 
     def _MakeLogin(self, user_name, password):
-        # 商品画面を開く
-        self.driver.get(self._GetProductListUrl())
+        # ログイン画面を開く
+        self.driver.get(self._GetLoginUrl())
 
         self.driver.find_element_by_name("login_id").send_keys(user_name)
         self.driver.find_element_by_name("password").send_keys(password)
@@ -51,19 +51,10 @@ class FanzaDoujin(DoujinShop):
         wait.until(lambda driver: driver.current_url == "https://www.dmm.co.jp/dc/-/mylibrary/")
 
     def _CheckLogin(self):
-        try:
-            page_title_element = self.driver.find_element_by_css_selector("#mylibrary-app > div > div:nth-child(1) > div.localListArea12vtK > div.headerTitleList1LTRN > h1")
-            print(page_title_element.text)
-        except NoSuchElementException:
-            print('Fail: FanzaDoujin')
-            raise 'Fail: _CheckLogin'
+        assert '購入済み作品' in self.driver.find_element_by_css_selector("#mylibrary-app > div > div:nth-child(1) > div.localListArea12vtK > div.headerTitleList1LTRN > h1").text
 
-    def _GetProductUrlList(self):
-        url_list = []
-
+    def _CreateFromProductList(self):
         for element in self.driver.find_elements_by_class_name('localListProduct1pSCw'):
             inner_html = element.get_attribute("innerHTML")
             infos = re.findall(r'<a href=\"/dc/-/mylibrary/detail/=/product_id=(.*/)\".*<p>(.*)</p></div><p', inner_html)
-            url_list.append('https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=' + infos[0][0])
-
-        return url_list
+            self._QueueCreateProduct('https://www.dmm.co.jp/dc/doujin/-/detail/=/cid=' + infos[0][0])

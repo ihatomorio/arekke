@@ -53,15 +53,15 @@ class FanzaComic(DoujinShop):
         return "fanza_comic/" + filename[0]
 
     def _GetLoginUrl(self):
-        return 'https://book.dmm.co.jp/library/?age_limit=all&expired=0'
+        return self._GetProductListUrl()
 
     def _GetProductListUrl(self):
         return 'https://book.dmm.co.jp/library/?age_limit=all&expired=0'
 
     def _MakeLogin(self, user_name, password):
-        # 商品画面を開く
-        self.driver.get(self._GetProductListUrl())
-
+        # open login page
+        self.driver.get(self._GetLoginUrl())
+        # imput login info
         self.driver.find_element_by_name("login_id").send_keys(user_name)
         self.driver.find_element_by_name("password").send_keys(password)
         self.driver.find_element_by_css_selector('#loginbutton_script_on > span').click()
@@ -75,24 +75,16 @@ class FanzaComic(DoujinShop):
             raise "redirect timeout"
 
     def _CheckLogin(self):
-        try:
-            page_title_element = self.driver.find_element_by_css_selector("div.m-boxMyLibraryPageTitle__txt")
-            print(page_title_element.text)
-        except NoSuchElementException:
-            print('Fail: FanzaDoujin')
-            raise 'Fail: _CheckLogin'
+        assert '電子書籍' in self.driver.find_element_by_css_selector("div.m-boxMyLibraryPageTitle__txt > span").text
 
-    def _GetProductUrlList(self):
-        url_list = []
+    def _CreateFromProductList(self):
         series_url_list = []
-
-        self.driver.implicitly_wait(30)
 
         # 購入済みの本一覧ページを探索
         while(True):
             # 単行本の検索
             try:
-                self._AddBookUrlFromProductList(url_list)
+                self._AddBookUrlFromProductList()
             except NoSuchElementException:
                 pass
 
@@ -121,7 +113,7 @@ class FanzaComic(DoujinShop):
             while(True):
                 # 単行本の検索
                 try:
-                    self._AddBookUrlFromProductList(url_list)
+                    self._AddBookUrlFromProductList()
                 except NoSuchElementException:
                     pass
 
@@ -132,9 +124,7 @@ class FanzaComic(DoujinShop):
                     # button not found means no more pages
                     break
 
-        return url_list
-
-    def _AddBookUrlFromProductList(self, book_url_list):
+    def _AddBookUrlFromProductList(self):
         indivisual_book_elements = self.driver.find_elements_by_css_selector('a.m-boxListBookProductBlock__btn__read')
         for element in indivisual_book_elements:
             if 'アプリで読む' == element.text:
@@ -142,13 +132,13 @@ class FanzaComic(DoujinShop):
                 if 'digital_book' in appli_url:
                     product_id = re.findall(r'product_id=([a-z0-9]*)&shop=digital_book', appli_url)
                     book_url = 'https://book.dmm.co.jp/detail/' + product_id[0] + '/'
-                    book_url_list.append(book_url)
                     print('found:', book_url)
+                    self._QueueCreateProduct(book_url)
                 else:
                     product_id = re.findall(r'product_id=([a-z0-9]*)&shop=digital_gbook', appli_url)
                     book_url = 'https://book.dmm.com/detail/' + product_id[0] + '/'
-                    book_url_list.append(book_url)
                     print('found:', book_url)
+                    self._QueueCreateProduct(book_url)
 
     def _ClickNextPagingButton(self):
         # ページ遷移ボタン検索
@@ -157,7 +147,6 @@ class FanzaComic(DoujinShop):
             # ボタンが＞ならクリック
             if '＞' in paging_element.text:
                 paging_element.click()
-                # time.sleep(5)
                 break
         else: # button not found means no more pages
             raise NoSuchElementException

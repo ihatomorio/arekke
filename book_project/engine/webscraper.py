@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from concurrent import futures
 import re
+import sys
 
 import chromedriver_binary
 from selenium import webdriver
@@ -14,10 +15,15 @@ from django.utils import timezone
 from book_app.models import Account, Product
 
 
+# global variable
+_executor = futures.ThreadPoolExecutor(max_workers=4)
+
+
 class DoujinShop(metaclass=ABCMeta):
 
     def __init__(self):
         self.driver = None
+        self.request_by = None
 
     @staticmethod
     def UpdateProductInfo(product, set_shop_num):
@@ -57,9 +63,12 @@ class DoujinShop(metaclass=ABCMeta):
                 product.title = '商品ページなし'
 
         # その他の例外
-        except:
+        except Exception as exception:
             product.title = '取得失敗'
-
+            print('exception: ', exception, file=sys.stderr)
+            doujinshop.driver.save_screenshot('error.png')
+            import traceback
+            traceback.print_exc()
 
         # 取得結果の保存
         product.save()
@@ -85,7 +94,13 @@ class DoujinShop(metaclass=ABCMeta):
             return
 
         # インスタンスに対して商品一覧取得を開始
-        doujinshop.__GetProductList(account, request_by)
+        try:
+            doujinshop.__GetProductList(account, request_by)
+        except Exception as exception:
+            print('exception: ', exception, file=sys.stderr)
+            doujinshop.driver.save_screenshot('error.png')
+            import traceback
+            traceback.print_exc()
 
         # 取得完了の時間を入れる
         account.date = timezone.now()
@@ -106,13 +121,19 @@ class DoujinShop(metaclass=ABCMeta):
         )
 
         # 並列処理で商品情報を取得する
-        DoujinShop.UpdateProductInfo(product, True)
+        try:
+            DoujinShop.UpdateProductInfo(product, True)
+        except Exception as exception:
+            print('exception: ', exception, file=sys.stderr)
+            doujinshop.driver.save_screenshot('error.png')
+            import traceback
+            traceback.print_exc()
 
     def __UpdateProductInfoFromUrl(self, product, url):
-        print('start: __UpdateProductInfoFromUrl')
+        print('Update: ', url)
         # ブラウザを開く
-        self.__OpenBrowser(url)
-        print('URL: ', url)
+        self.__OpenBrowser()
+        self.driver.get(url)
 
         # ページのタイトルを確認する
         self._CheckOpened()
@@ -140,44 +161,47 @@ class DoujinShop(metaclass=ABCMeta):
         except NoSuchElementException:
             product.image_url = ''
 
-            # ブラウザを閉じる
-            self.__CloseBrowser()
+        # ブラウザを閉じる
+        self.__CloseBrowser()
 
     def __GetProductList(self, account, request_by):
-        # ログインページを開く
-        self.__OpenBrowser(self._GetLoginUrl())
-        print('__OpenBrowser')
+        self.request_by = request_by
+
+        # ブラウザを生成
+        self.__OpenBrowser()
 
         # ログインする
+        print('making login')
         self._MakeLogin(account.user, account.password)
-        print('_MakeLogin')
 
         # ログインを確認
+        print('checking login')
         self._CheckLogin()
-        print('_CheckLogin')
+        print('login succeeded')
 
-        # 商品URL一覧を取得
-        # url_list must be newer to old
-        url_list = self._GetProductUrlList()
-
-        # 商品URLごとに商品作成
-        with futures.ThreadPoolExecutor(max_workers=4) as executer:
-            for url in reversed(url_list):
-                executer.submit(fn=DoujinShop.CreateFromUrl, url=url, request_by=request_by)
-                # DoujinShop.CreateFromUrl(self._GetUrlFromProductElement(product_element), request_by)
+        # 商品URL一覧を取得し商品を作成
+        print('getting product')
+        self._CreateFromProductList()
+        print('getting product end')
 
         # ブラウザを閉じる
         self.__CloseBrowser()
-        print('__CloseBrowser')
+
+    def _QueueCreateProduct(self, url, title=None, bought_date=None):
+        print('Queued:', url)
+        assert self.request_by != None
+        _executor.submit(fn=DoujinShop.CreateFromUrl, url=url, request_by=self.request_by)
 
     # ブラウザの生成
-    def __OpenBrowser(self, url):
+    def __OpenBrowser(self, url=None):
         options = Options()
         options.binary_location = '/usr/bin/google-chrome'
         options.add_argument('--headless')
         options.add_argument('--no-sandbox') #rootに必要
         self.driver = webdriver.Chrome(options=options)
-        self.driver.get(url)
+        self.driver.implicitly_wait(30)
+        if url != None:
+            self.driver.get(url)
 
     # ブラウザ終了
     def __CloseBrowser(self):
@@ -246,7 +270,7 @@ class DoujinShop(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def _GetProductUrlList(self):
+    def _CreateFromProductList(self):
         pass
 
     class NoSuchProductPageException(Exception):
