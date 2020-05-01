@@ -132,6 +132,7 @@ class DoujinShop(metaclass=ABCMeta):
         if product.title == '商品ページなし':
             product.title = title
             product.circle = circle
+            product.url = None
 
         product.bought_date = bought_date
 
