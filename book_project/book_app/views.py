@@ -12,12 +12,12 @@ from engine.webscraper import DoujinShop
 
 
 # global variable
-_executer = futures.ThreadPoolExecutor(max_workers=4)
+_executor = futures.ThreadPoolExecutor(max_workers=4)
 
 
 @login_required
 def product_list(request):
-    products = Product.objects.filter(owner=request.user)
+    products = Product.objects.filter(owner=request.user).order_by('-id')
 
     # POSTの場合更新処理
     if request.method == "POST":
@@ -29,7 +29,7 @@ def product_list(request):
 
         # 並列処理で商品情報を取得する
         # DoujinShop.UpdateProductInfo(product, False)
-        _executer.submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=False)
+        _executor.submit(fn=DoujinShop.UpdateProductInfo, product=product, set_shop_num=False)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/')
@@ -77,7 +77,7 @@ def product_new_from_url(request):
             added_date = timezone.now(),
         )
 
-        _executer.submit(fn=DoujinShop.UpdateProductInfo, product=added_product, set_shop_num=False)
+        _executor.submit(fn=DoujinShop.UpdateProductInfo, product=added_product, set_shop_num=False)
 
         return redirect('/product/new-from-url/')
     else:
@@ -121,7 +121,7 @@ def product_edit(request, pk):
 
 @login_required
 def account_list(request):
-    accounts = Account.objects.filter(owner=request.user)
+    accounts = Account.objects.filter(owner=request.user).order_by('-id')
     if request.method == "POST":
         # POSTリクエストからpkを取り出す
         pk_id = request.POST.get('pk',None)
@@ -131,7 +131,7 @@ def account_list(request):
 
         # Webスクレイピングを実行
         # DoujinShop.GetProductList(account, request.user)
-        _executer.submit(fn=DoujinShop.GetProductList, account=account, request_by=request.user)
+        _executor.submit(fn=DoujinShop.GetProductList, account=account, request_by=request.user)
 
         # 同じページにリダイレクトしてPOSTの要求をクリアする
         return redirect('/account/list/')

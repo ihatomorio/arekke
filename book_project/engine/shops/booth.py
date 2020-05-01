@@ -56,5 +56,5 @@ class Booth(DoujinShop):
     def _CheckLogin(self):
         raise NotImplementedError
 
-    def _GetProductUrlList(self):
+    def _CreateFromProductList(self):
         raise NotImplementedError
