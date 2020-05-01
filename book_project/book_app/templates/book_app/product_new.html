@@ -45,12 +45,13 @@
             {{ form.date.label_tag }}
             {{ form.date | add_class:"form-control" }}
         </div>
-        <div class="form-group custom-file">
+        <div class="form-group custom-file my-4">
             <label class="custom-file-label" for="customFile">表紙ファイルを選択</label>
             {{ form.image_path | add_class:"custom-file-input" }}
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary">保存</button>
+            <button type="submit" class="btn btn-danger" name="delete">この本を削除</button>
         </div>
     </form>
 

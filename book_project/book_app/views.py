@@ -42,6 +42,10 @@ def product_list(request):
 def product_new(request):
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
+
+        if 'delete' in request.POST:
+            return redirect('/')
+
         if form.is_valid():
             cd = form.cleaned_data
 
@@ -84,6 +88,11 @@ def product_edit(request, pk):
 
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
+
+        if 'delete' in request.POST:
+            procuct_object.delete()
+            return redirect('/')
+
         if form.is_valid():
             cd = form.cleaned_data
 
