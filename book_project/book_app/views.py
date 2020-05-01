@@ -49,6 +49,11 @@ def product_new(request):
         if form.is_valid():
             cd = form.cleaned_data
 
+            if 'image_delete' in request.POST:
+                image_path = None
+            else:
+                image_path = cd['image_path']
+
             Product.objects.create(
                 owner=request.user,
                 shop = cd['shop'],
@@ -56,7 +61,7 @@ def product_new(request):
                 title = cd['title'],
                 author = cd['author'],
                 circle = cd['circle'],
-                image_path = cd['image_path'],
+                image_path = image_path,
                 added_date = timezone.now(),
             )
 
