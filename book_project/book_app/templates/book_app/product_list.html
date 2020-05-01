@@ -101,11 +101,11 @@
 
           <!-- start  product name -->
           {% if products.url %}
-          <a href="{{products.url}}" target="_blank" rel="noopener noreferrer">{{products.title}}</a>
-          {% if products.shop %}<br><span class="badge badge-primary">{{products.get_shop_display}}</span>{% endif %}
+            <a href="{{products.url}}" target="_blank" rel="noopener noreferrer">{{products.title}}</a>
           {% else %}
-          {{ products.title }}
+            {{ products.title }}
           {% endif %}
+          {% if products.shop %}<br><span class="badge badge-primary">{{products.get_shop_display}}</span>{% endif %}
           <!-- end  product name -->
         </td>
         <td>{{products.author}}</td>
