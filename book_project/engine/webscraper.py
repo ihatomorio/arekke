@@ -107,7 +107,7 @@ class DoujinShop(metaclass=ABCMeta):
         account.save()
 
     @staticmethod
-    def CreateFromUrl(url, request_by, title=None, circle=None, bought_date=None):
+    def CreateFromUrl(url, request_by, set_shop_num=True, title=None, circle=None, bought_date=None):
         # URL被りがあったら生成中断
         if Product.objects.filter(owner=request_by, url=url):
             return
@@ -122,7 +122,7 @@ class DoujinShop(metaclass=ABCMeta):
 
         # 並列処理で商品情報を取得する
         try:
-            instance = DoujinShop.UpdateProductInfo(product, True)
+            instance = DoujinShop.UpdateProductInfo(product, set_shop_num)
         except Exception as exception:
             print('exception: ', exception, file=sys.stderr)
             instance.driver.save_screenshot('error.png')

@@ -66,18 +66,11 @@ def product_new(request):
 def product_new_from_url(request):
     if request.method == "POST":
         form = ProductForm(request.POST)
-        # if form.is_valid(): #skipo check
-        print(form)
+        # if form.is_valid(): #skip check
+        print(form) # if remove this, cause broke
         cd = form.cleaned_data
 
-        added_product = Product.objects.create(
-            owner=request.user,
-            url = cd['url'],
-            title = 'loading',
-            added_date = timezone.now(),
-        )
-
-        _executor.submit(fn=DoujinShop.UpdateProductInfo, product=added_product, set_shop_num=False)
+        _executor.submit(fn=DoujinShop.CreateFromUrl, url=cd['url'], request_by=request.user, set_shop_num=False)
 
         return redirect('/product/new-from-url/')
     else:
