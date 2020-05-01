@@ -17,7 +17,7 @@ _executer = futures.ThreadPoolExecutor(max_workers=4)
 
 @login_required
 def product_list(request):
-    products = Product.objects.filter(owner=request.user)
+    products = Product.objects.filter(owner=request.user).order_by('-id')
 
     # POSTの場合更新処理
     if request.method == "POST":
@@ -121,7 +121,7 @@ def product_edit(request, pk):
 
 @login_required
 def account_list(request):
-    accounts = Account.objects.filter(owner=request.user)
+    accounts = Account.objects.filter(owner=request.user).order_by('-id')
     if request.method == "POST":
         # POSTリクエストからpkを取り出す
         pk_id = request.POST.get('pk',None)
