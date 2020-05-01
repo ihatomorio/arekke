@@ -93,6 +93,9 @@ def product_edit(request, pk):
             procuct_object.delete()
             return redirect('/')
 
+        if 'image_delete' in request.POST:
+            procuct_object.image_path = None
+
         if form.is_valid():
             cd = form.cleaned_data
 
