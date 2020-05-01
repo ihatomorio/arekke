@@ -109,7 +109,7 @@ class DoujinShop(metaclass=ABCMeta):
     @staticmethod
     def CreateFromUrl(url, request_by, title=None, circle=None, bought_date=None):
         # URL被りがあったら生成中断
-        if Product.objects.filter(url=url):
+        if Product.objects.filter(owner=request_by, url=url):
             return
 
         # 商品を生成
