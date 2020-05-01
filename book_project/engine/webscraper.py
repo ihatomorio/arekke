@@ -31,7 +31,7 @@ class DoujinShop(metaclass=ABCMeta):
             doujinshop = Booth()
         elif 'www.dlsite.com' in product.url:
             doujinshop = DLSite()
-        elif 'book.dmm.co.jp' in product.url:
+        elif 'book.dmm.co.jp' in product.url or 'book.dmm.com' in product.url:
             doujinshop = FanzaComic()
         elif 'www.dmm.co.jp/dc/doujin' in product.url:
             doujinshop = FanzaDoujin()
