@@ -27,7 +27,7 @@ class FanzaComic(DoujinShop):
             pass
 
         # タイトルに'FANZA電子書籍'が含まれていることを確認する。
-        assert 'FANZA電子書籍' in self.driver.title
+        assert 'FANZA電子書籍' in self.driver.title or 'DMM電子書籍' in self.driver.title
 
     def _GetShopNumber(self):
         return Product.FANZA_COMIC
