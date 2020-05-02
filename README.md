@@ -53,10 +53,9 @@ $ python --version
 Python 3.6.9
 
 $ google-chrome --version
-Google Chrome 80.0.3987.132
-
+Google Chrome 81.0.4044.34 beta
 $ chromedriver --version
-ChromeDriver 80.0.3987.16 (320f6526c1632ad4f205ebce69b99a062ed78647-refs/branch-heads/3987@{#185})
+ChromeDriver 81.0.4044.69 (6813546031a4bc83f717a2ef7cd4ac6ec1199132-refs/branch-heads/4044@{#776})
 
 $ python
 Python 3.6.9 (default, Nov  7 2019, 10:44:02)
